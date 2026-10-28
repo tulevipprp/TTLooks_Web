@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vé Đã Đặt & E-Ticket Của Tôi - TTLooks</title>
+    <!-- Bootstrap 5, FontAwesome & SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --brand-orange: #ff5b00;
+            --brand-orange-hover: #e04f00;
+        }
+        .navbar-brand { font-weight: 800; color: var(--brand-orange) !important; font-size: 1.5rem; }
+        .btn-orange { background-color: var(--brand-orange); color: #fff; border: none; font-weight: 600; }
+        .btn-orange:hover { background-color: var(--brand-orange-hover); color: #fff; }
+        .booking-card {
+            border: none; border-radius: 16px; background: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: all 0.25s ease;
+        }
+        .booking-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .thumb-img { width: 140px; height: 110px; object-fit: cover; border-radius: 12px; }
+        @media (max-width: 768px) {
+            .thumb-img { width: 100%; height: 160px; }
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #printTicketArea, #printTicketArea * { visibility: visible; }
+            #printTicketArea { position: absolute; left: 0; top: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-compass me-2"></i>TTLooks</a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <a href="profile.html" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-semibold">
+                    <i class="fa-solid fa-user-circle me-1 text-warning"></i> Hồ Sơ Cá Nhân
+                </a>
+                <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Trang Chủ
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h3 class="fw-bold mb-1 text-dark"><i class="fa-solid fa-ticket text-warning me-2"></i>Vé Đã Đặt & E-Ticket Của Tôi</h3>
+                <p class="text-muted small mb-0">Quản lý các hoạt động du lịch, xuất trình mã QR vào cổng hoặc thanh toán đơn vé</p>
+            </div>
+            <a href="/" class="btn btn-orange btn-sm rounded-pill px-3">
+                <i class="fa-solid fa-plus me-1"></i> Đặt Thêm Trải Nghiệm Mới
+            </a>
+        </div>
+
+        <!-- Vùng danh sách vé -->
+        <div id="bookingListArea" class="row g-3">
+            <div class="col-12 text-center text-muted py-5"><div class="spinner-border text-warning" role="status"></div></div>
+        </div>
+    </div>
+
+    <!-- Modal Xem Vé Điện Tử E-Ticket QR Code -->
+    <div class="modal fade" id="eTicketModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 p-3 shadow text-center" id="printTicketArea">
+                <div class="modal-header border-0 pb-0">
+                    <div class="w-100">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 mb-2 fw-bold">
+                            <i class="fa-solid fa-bolt me-1"></i>VÉ ĐIỆN TỬ CHÍNH THỨC (E-TICKET)
+                        </span>
+                        <h5 class="modal-title fw-bold text-dark" id="eTitle">Tên trải nghiệm</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="p-2 bg-white d-inline-block rounded-3 border mb-3 shadow-sm">
+                        <img id="eQrImage" src="" alt="Mã QR Vé" style="width: 210px; height: 210px;">
+                    </div>
+                    <div class="alert alert-light border py-2 mb-3">
+                        <small class="text-muted d-block">Mã số vé tra cứu:</small>
+                        <strong class="text-danger fs-5 letter-spacing-1" id="eTicketCode">TTL-2026-XXXX</strong>
+                    </div>
+
+                    <div class="row text-start g-2 small text-muted bg-light p-3 rounded-3 mb-3">
+                        <div class="col-6">Người nhận vé: <strong class="text-dark d-block" id="eCustomerName">...</strong></div>
+                        <div class="col-6">Số lượng vé: <strong class="text-dark d-block" id="eQty">...</strong></div>
+                        <div class="col-6">Ngày tham quan: <strong class="text-danger d-block" id="eTravelDate">...</strong></div>
+                        <div class="col-6">Tổng thanh toán: <strong class="text-dark d-block" id="eTotal">...</strong></div>
+                    </div>
+
+                    <div class="small text-muted text-start border-top pt-2 mb-3">
+                        <i class="fa-solid fa-circle-info text-primary me-1"></i><strong>Hướng dẫn:</strong> Quý khách xuất trình mã QR này trực tiếp tại quầy check-in của điểm tham quan.
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary w-100 rounded-pill" onclick="window.print()">
+                            <i class="fa-solid fa-print me-1"></i> In Vé / Lưu PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Thanh Toán VietQR (Cho đơn chưa thanh toán) -->
+    <div class="modal fade" id="payAgainModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered text-center">
+            <div class="modal-content rounded-4 border-0 p-3 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-success w-100"><i class="fa-solid fa-shield-halved me-1"></i>Thanh Toán Chuyển Khoản VietQR</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-2">Quét mã bằng App ngân hàng bất kỳ để kích hoạt vé tức thì:</p>
+                    <div class="p-2 bg-white d-inline-block rounded-3 border mb-3">
+                        <img id="againQrImg" src="" alt="VietQR" class="img-fluid" style="max-height: 250px;">
+                    </div>
+                    <div class="alert alert-warning py-2 mb-3">
+                        <small class="d-block fw-bold" id="againQrNote">Nội dung: ...</small>
+                        <small class="text-danger fw-bold fs-5" id="againQrAmount">0 đ</small>
+                    </div>
+                    <button class="btn btn-success w-100 py-2 rounded-pill fw-bold" onclick="confirmPaymentSuccess()">
+                        <i class="fa-solid fa-circle-check me-1"></i> [MÔ PHỎNG] Tôi Đã Chuyển Khoản Xong
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const userStr = localStorage.getItem('user');
+        if (!userStr) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Yêu cầu đăng nhập',
+                text: 'Vui lòng đăng nhập để xem vé đã đặt!',
+                confirmButtonColor: '#ff5b00'
+            }).then(() => window.location.href = '/');
+        }
+
+        const currentUser = JSON.parse(userStr);
+        let bookingsCache = [];
+        let payingBookingId = 0;
+
+        async function loadBookings() {
+            const area = document.getElementById('bookingListArea');
+            try {
+                const res = await fetch(`/api/bookings/my/${currentUser.userId}`);
+                const data = await res.json();
+                bookingsCache = data;
+
+                if (!data || data.length === 0) {
+                    area.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <i class="fa-solid fa-ticket-simple fs-1 text-muted mb-3 d-block"></i>
+                            <h5 class="fw-bold text-muted">Bạn chưa có đơn đặt vé nào</h5>
+                            <p class="small text-secondary">Hãy chọn một địa điểm tham quan tuyệt vời để bắt đầu chuyến đi!</p>
+                            <a href="/" class="btn btn-orange rounded-pill px-4 mt-2">Khám Phá Trải Nghiệm Ngay</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                area.innerHTML = data.map(item => `
+                    <div class="col-12">
+                        <div class="card booking-card p-3 d-flex flex-md-row align-items-center gap-3">
+                            <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'}" class="thumb-img" alt="${item.title}">
+                            <div class="flex-grow-1">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="badge ${item.status === 'Đã thanh toán' ? 'bg-success' : 'bg-warning text-dark'} fw-bold">${item.status}</span>
+                                    <span class="badge bg-light text-secondary border">Mã đơn: #${item.bookingId}</span>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-1 fs-6">${item.title}</h6>
+                                <div class="small text-muted mb-2">
+                                    <span><i class="fa-regular fa-calendar-days me-1 text-warning"></i>Ngày đi: <strong class="text-dark">${item.travelDate}</strong></span>
+                                    <span class="mx-2">&bull;</span>
+                                    <span>Số lượng: <strong class="text-dark">${item.quantity} vé</strong></span>
+                                    <span class="mx-2">&bull;</span>
+                                    <span>Đặt ngày: ${item.createdAt}</span>
+                                </div>
+                                <div class="small text-secondary">
+                                    <i class="fa-solid fa-user me-1"></i>Người nhận: ${item.customerName} (${item.customerPhone})
+                                </div>
+                            </div>
+                            <div class="text-md-end text-center mt-3 mt-md-0">
+                                <div class="text-danger fw-bold fs-5 mb-2">${Number(item.totalPrice).toLocaleString('vi-VN')} đ</div>
+                                ${item.status === 'Đã thanh toán' ? `
+                                    <button class="btn btn-sm btn-outline-success rounded-pill px-3 fw-bold" onclick="openETicket(${item.bookingId})">
+                                        <i class="fa-solid fa-qrcode me-1"></i> Xem Vé QR (E-Ticket)
+                                    </button>
+                                ` : `
+                                    <button class="btn btn-sm btn-orange rounded-pill px-3 fw-bold" onclick="openPayAgain(${item.bookingId})">
+                                        <i class="fa-solid fa-credit-card me-1"></i> Thanh Toán Ngay
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                area.innerHTML = `<div class="col-12 text-center text-danger py-4">Lỗi tải dữ liệu: ${err.message}</div>`;
+            }
+        }
+
+        function openETicket(bookingId) {
+            const item = bookingsCache.find(x => x.bookingId === bookingId);
+            if (!item) return;
+
+            document.getElementById('eTitle').innerText = item.title;
+            document.getElementById('eTicketCode').innerText = item.ticketCode;
+            document.getElementById('eCustomerName').innerText = item.customerName;
+            document.getElementById('eQty').innerText = item.quantity + ' vé';
+            document.getElementById('eTravelDate').innerText = item.travelDate;
+            document.getElementById('eTotal').innerText = Number(item.totalPrice).toLocaleString('vi-VN') + ' đ';
+
+            // Tạo mã QR bằng API tiêu chuẩn
+            document.getElementById('eQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(item.ticketCode)}`;
+            new bootstrap.Modal(document.getElementById('eTicketModal')).show();
+        }
+
+        function openPayAgain(bookingId) {
+            const item = bookingsCache.find(x => x.bookingId === bookingId);
+            if (!item) return;
+            payingBookingId = bookingId;
+
+            document.getElementById('againQrImg').src = item.vietQrUrl;
+            document.getElementById('againQrNote').innerText = 'Nội dung: ' + item.qrContent;
+            document.getElementById('againQrAmount').innerText = Number(item.totalPrice).toLocaleString('vi-VN') + ' đ';
+
+            new bootstrap.Modal(document.getElementById('payAgainModal')).show();
+        }
+
+        async function confirmPaymentSuccess() {
+            if (!payingBookingId) return;
+            const res = await fetch(`/api/bookings/confirm/${payingBookingId}`, { method: 'POST' });
+            if (res.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('payAgainModal')).hide();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thanh Toán Thành Công!',
+                    text: 'Vé của bạn đã được kích hoạt thành công!',
+                    confirmButtonColor: '#ff5b00'
+                }).then(() => loadBookings());
+            }
+        }
+
+        window.onload = loadBookings;
+    </script>
+</body>
+</html>

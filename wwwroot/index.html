@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TTLooks - Đặt Vé & Trải Nghiệm Du Lịch AI</title>
+    <!-- Bootstrap 5, FontAwesome & SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --brand-orange: #ff5b00;
+            --brand-orange-hover: #e04f00;
+        }
+
+        .navbar-brand { font-weight: 800; color: var(--brand-orange) !important; font-size: 1.6rem; }
+        .btn-orange { background-color: var(--brand-orange); color: #fff; border: none; font-weight: 600; }
+        .btn-orange:hover { background-color: var(--brand-orange-hover); color: #fff; }
+
+        .hero-banner {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+            color: #fff;
+            padding: 65px 20px 55px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        .search-pill {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 50px;
+            padding: 6px 10px 6px 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 1rem;
+            color: #333;
+            background: transparent;
+        }
+
+        .category-item { text-align: center; color: #333; cursor: pointer; transition: transform 0.2s; }
+        .category-item:hover { transform: translateY(-4px); color: var(--brand-orange); }
+        .category-icon {
+            width: 55px; height: 55px; border-radius: 50%; background: #fff3eb; color: var(--brand-orange);
+            display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 6px;
+            box-shadow: 0 4px 10px rgba(255,91,0,0.15);
+        }
+        .category-item:hover .category-icon { background: var(--brand-orange); color: #fff; }
+
+        .activity-card {
+            border: none; border-radius: 16px; overflow: hidden; background: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .activity-card:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(0,0,0,0.12); }
+        .card-img-wrapper { position: relative; height: 180px; overflow: hidden; }
+        .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .activity-card:hover .card-img-wrapper img { transform: scale(1.06); }
+        .badge-instant {
+            position: absolute; top: 10px; left: 10px; background: var(--brand-orange);
+            color: #fff; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;
+        }
+
+        .timeline-day-badge {
+            background: linear-gradient(135deg, #ff5b00, #ff8533);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        .plan-place-card {
+            border: none;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease;
+        }
+        .plan-place-card:hover { transform: translateY(-4px); }
+        .plan-place-img { height: 140px; width: 100%; object-fit: cover; }
+        .time-tag { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 12px; }
+        .badge-morning { background-color: #ffc107; color: #212529; }
+        .badge-noon { background-color: #fd7e14; color: #fff; }
+        .badge-afternoon { background-color: #0d6efd; color: #fff; }
+        .badge-evening { background-color: #6f42c1; color: #fff; }
+
+        .chat-bubble-btn {
+            position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; border-radius: 50%;
+            background: linear-gradient(135deg, #ff5b00, #ff8533); color: #fff; display: flex;
+            align-items: center; justify-content: center; font-size: 1.6rem;
+            box-shadow: 0 6px 20px rgba(255, 91, 0, 0.4); cursor: pointer; z-index: 9999; transition: transform .2s;
+        }
+        .chat-bubble-btn:hover { transform: scale(1.08); }
+        .chat-window {
+            position: fixed; bottom: 95px; right: 25px; width: 380px; max-width: 92vw; height: 530px;
+            background: #fff; border-radius: 20px; box-shadow: 0 12px 35px rgba(0,0,0,0.25); display: none;
+            flex-direction: column; overflow: hidden; z-index: 9999; border: 1px solid #e2e8f0;
+        }
+        .chat-header {
+            background: linear-gradient(135deg, #ff5b00, #ff8533); color: #fff;
+            padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .chat-body {
+            flex-grow: 1; padding: 15px; overflow-y: auto; background: #f8fafc;
+            display: flex; flex-direction: column; gap: 10px; font-size: 0.92rem;
+        }
+        .chat-msg {
+            max-width: 84%; padding: 10px 14px; border-radius: 14px; line-height: 1.5;
+            white-space: pre-wrap; word-break: break-word;
+        }
+        .chat-msg.bot {
+            background: #fff; color: #1e293b; border: 1px solid #e2e8f0;
+            align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .chat-msg.user {
+            background: var(--brand-orange); color: #fff;
+            align-self: flex-end; border-bottom-right-radius: 4px;
+        }
+        .quick-tag {
+            background: #fff; border: 1px solid #ffccb0; color: #ff5b00;
+            border-radius: 15px; padding: 4px 10px; font-size: 0.76rem; font-weight: 600;
+            cursor: pointer; transition: all .2s ease;
+        }
+        .quick-tag:hover { background: #ff5b00; color: #fff; }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-compass me-2"></i>TTLooks</a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <button class="btn btn-outline-warning text-dark fw-bold btn-sm rounded-pill me-2" data-bs-toggle="modal" data-bs-target="#aiPlanModal">
+                    <i class="fa-solid fa-wand-magic-sparkles text-warning me-1"></i> Trợ Lý Lập Lịch Trình AI
+                </button>
+                <div id="authNavArea">
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
+                    <button class="btn btn-sm btn-orange rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#registerModal">Đăng ký</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container py-3">
+
+        <!-- Hero Banner -->
+        <div class="hero-banner text-center shadow-sm">
+            <h1 class="display-6 fw-bold mb-2">Thế Giới Trải Nghiệm Du Lịch TTLooks ✈️</h1>
+            <p class="fs-6 opacity-90 mb-4">Khám phá tour du lịch, vé tham quan và hoạt động vui chơi đặc sắc</p>
+
+            <div class="search-pill mb-3">
+                <i class="fa-solid fa-magnifying-glass text-muted fs-5 me-3"></i>
+                <input type="text" id="txtSearch" class="search-input" placeholder="Tìm Bà Nà Hills, Hội An, Phú Quốc, Singapore, Hàn Quốc..." onkeypress="if(event.key==='Enter') loadActivities()">
+                <button class="btn btn-orange rounded-pill px-4" onclick="loadActivities()">Tìm kiếm</button>
+            </div>
+
+            <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
+                <span class="small opacity-75"><i class="fa-solid fa-fire text-warning me-1"></i>Xu hướng:</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill cursor-pointer" style="cursor:pointer;" onclick="quickSearch('Bà Nà')">Bà Nà Hills</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill cursor-pointer" style="cursor:pointer;" onclick="quickSearch('Hội An')">Hội An</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill cursor-pointer" style="cursor:pointer;" onclick="quickSearch('Singapore')">Singapore</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill cursor-pointer" style="cursor:pointer;" onclick="quickSearch('Seoul')">Seoul Hàn Quốc</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill cursor-pointer" style="cursor:pointer;" onclick="quickSearch('Disneyland')">Thượng Hải</span>
+            </div>
+        </div>
+
+        <!-- Danh mục icon tròn -->
+        <div class="row g-3 justify-content-center mb-4 text-center">
+            <div class="col-4 col-md-2" onclick="quickSearch('')">
+                <div class="category-item"><div class="category-icon"><i class="fa-solid fa-shapes"></i></div><span class="small fw-bold">Tất cả</span></div>
+            </div>
+            <div class="col-4 col-md-2" onclick="quickSearch('Cáp Treo')">
+                <div class="category-item"><div class="category-icon"><i class="fa-solid fa-mountain"></i></div><span class="small fw-bold">Cáp treo</span></div>
+            </div>
+            <div class="col-4 col-md-2" onclick="quickSearch('Thuyền')">
+                <div class="category-item"><div class="category-icon"><i class="fa-solid fa-ship"></i></div><span class="small fw-bold">Tour thuyền</span></div>
+            </div>
+            <div class="col-4 col-md-2" onclick="quickSearch('Disneyland')">
+                <div class="category-item"><div class="category-icon"><i class="fa-solid fa-castle"></i></div><span class="small fw-bold">Công viên</span></div>
+            </div>
+            <div class="col-4 col-md-2" data-bs-toggle="modal" data-bs-target="#aiPlanModal">
+                <div class="category-item"><div class="category-icon" style="background:#eef2ff; color:#4f46e5;"><i class="fa-solid fa-robot"></i></div><span class="small fw-bold text-primary">Lịch Trình AI</span></div>
+            </div>
+        </div>
+
+        <!-- Danh sách vé -->
+        <h4 class="fw-bold mb-3">Hoạt Động & Vé Nổi Bật</h4>
+        <div class="row g-4 mb-5" id="activityList">
+            <div class="col-12 text-center text-muted py-5"><div class="spinner-border text-warning" role="status"></div></div>
+        </div>
+    </div>
+
+    <!-- MODAL TRỢ LÝ AI LẬP LỊCH TRÌNH CÓ HÌNH ẢNH MINH HỌA -->
+    <div class="modal fade" id="aiPlanModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-wand-magic-sparkles me-2"></i>Trợ Lý AI Lập Lịch Trình Có Hình Ảnh Minh Họa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-3 mb-4 bg-light p-3 rounded-3 border">
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Điểm đến</label>
+                            <input type="text" id="aiDest" class="form-control" placeholder="Ví dụ: Đà Nẵng, Hội An, Phú Quốc...">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Thời gian</label>
+                            <select id="aiDays" class="form-select">
+                                <option value="1 ngày">1 ngày</option>
+                                <option value="2 ngày 1 đêm" selected>2 ngày 1 đêm</option>
+                                <option value="3 ngày 2 đêm">3 ngày 2 đêm</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Ngân sách dự kiến</label>
+                            <input type="text" id="aiBudget" class="form-control" placeholder="Ví dụ: 3 triệu / người">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold">Sở thích</label>
+                            <input type="text" id="aiPref" class="form-control" placeholder="Ẩm thực, check-in, cảm giác mạnh...">
+                        </div>
+                        <div class="col-12 text-end">
+                            <button class="btn btn-orange px-4 py-2 rounded-pill fw-bold" onclick="generateVisualAiPlan()">
+                                <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Tạo Lịch Trình Trực Quan Có Hình Ảnh
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="aiPlanLoading" class="text-center py-5 d-none">
+                        <div class="spinner-border text-warning" role="status"></div>
+                        <p class="text-muted mt-2">Trợ lý AI đang phân tích dữ liệu, ghép ảnh minh họa từng buổi Sáng - Trưa - Chiều - Tối cho bạn...</p>
+                    </div>
+
+                    <div id="aiVisualResultArea" class="d-none">
+                        <div class="alert alert-info border-0 shadow-sm rounded-3 mb-4 p-3">
+                            <div class="d-flex align-items-start">
+                                <i class="fa-solid fa-robot text-primary fs-3 me-3 mt-1"></i>
+                                <div>
+                                    <h6 class="fw-bold text-primary mb-1">Đánh giá & Lời khuyên từ Chuyên Gia Du Lịch AI:</h6>
+                                    <div class="text-secondary small" id="aiAdviceText" style="white-space: pre-line;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-route text-warning me-2"></i>Lộ Trình Trải Nghiệm Khuyên Dùng (Kèm Hình Ảnh Minh Họa)</h5>
+                        <div id="visualTimelineContainer"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Đăng nhập -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header text-white" style="background:var(--brand-orange);">
+                    <h5 class="modal-title fw-bold">Đăng Nhập TTLooks</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="admin@ttlooks.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Mật khẩu</label>
+                        <input type="password" id="loginPass" class="form-control" placeholder="••••••">
+                    </div>
+                    <button class="btn btn-orange w-100 py-2 rounded-pill fw-bold" onclick="doLogin()">Đăng Nhập</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Đăng ký -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header text-white" style="background:var(--brand-orange);">
+                    <h5 class="modal-title fw-bold">Đăng Ký Tài Khoản TTLooks</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Họ và tên</label>
+                        <input type="text" id="regName" class="form-control" placeholder="Nguyễn Văn A">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Email</label>
+                        <input type="email" id="regEmail" class="form-control" placeholder="email@gmail.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Mật khẩu</label>
+                        <input type="password" id="regPass" class="form-control" placeholder="••••••">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Số điện thoại</label>
+                        <input type="text" id="regPhone" class="form-control" placeholder="0901234567">
+                    </div>
+                    <button class="btn btn-orange w-100 py-2 rounded-pill fw-bold" onclick="doRegister()">Đăng Ký Ngay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bong bóng Chatbot AI -->
+    <div class="chat-bubble-btn" onclick="toggleChat()" title="Tư vấn du lịch 24/7">
+        <i class="fa-solid fa-comments"></i>
+    </div>
+
+    <!-- Cửa sổ Chatbot AI Nâng Cấp Thông Minh -->
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div class="d-flex align-items-center">
+                <i class="fa-solid fa-robot fs-5 me-2 text-warning"></i>
+                <div>
+                    <strong class="d-block" style="font-size: 0.95rem;">Trợ Lý AI TTLooks 24/7</strong>
+                    <small class="opacity-75" style="font-size: 0.72rem;">Có trí nhớ & am hiểu du lịch</small>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-white" onclick="toggleChat()"></button>
+        </div>
+        
+        <!-- Khung chat -->
+        <div class="chat-body" id="chatMsgs">
+            <div class="chat-msg bot">
+Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Em có thể giúp bạn gợi ý quán ăn ngon, thời tiết điểm đến, kinh nghiệm đi lại hoặc giải đáp quy định vé quét mã QR vào cổng. Bạn đang quan tâm chuyến đi nào ạ?
+            </div>
+        </div>
+
+        <!-- Các nút gợi ý câu hỏi nhanh -->
+        <div class="px-3 py-2 bg-white border-top d-flex gap-1 flex-wrap" id="quickQuestionsArea">
+            <span class="quick-tag" onclick="askQuick('Bà Nà Hills nên đi giờ nào và mặc gì?')">👗 Đi Bà Nà mặc gì?</span>
+            <span class="quick-tag" onclick="askQuick('Đặc sản ngon nhất ở Đà Nẵng là gì?')">🍲 Món ngon Đà Nẵng</span>
+            <span class="quick-tag" onclick="askQuick('Quy định đổi trả và quét mã vé QR trên TTLooks?')">🎟️ Quy định vé QR</span>
+        </div>
+
+        <!-- Khung gõ tin nhắn -->
+        <div class="p-2 bg-white border-top d-flex gap-2">
+            <input type="text" id="chatInput" class="form-control form-control-sm rounded-pill" placeholder="Hỏi AI bất kỳ điều gì..." onkeypress="if(event.key==='Enter') sendChat()">
+            <button class="btn btn-warning btn-sm rounded-circle text-white px-2" onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let chatHistory = [];
+
+        async function loadActivities(keyword = '') {
+            const search = keyword || document.getElementById('txtSearch').value;
+            const container = document.getElementById('activityList');
+            try {
+                const res = await fetch(`/api/activities?search=${encodeURIComponent(search)}`);
+                const data = await res.json();
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="col-12 text-center text-muted py-5">Không tìm thấy vé hoặc trải nghiệm phù hợp.</div>';
+                    return;
+                }
+                container.innerHTML = data.map(item => `
+                    <div class="col-md-3 col-sm-6">
+                        <div class="card h-100 activity-card" onclick="goToDetail(${item.activityId})">
+                            <div class="card-img-wrapper">
+                                <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'}" alt="${item.title}">
+                                <span class="badge-instant"><i class="fa-solid fa-bolt me-1"></i>Xác nhận tức thì</span>
+                            </div>
+                            <div class="card-body d-flex flex-column p-3">
+                                <h6 class="fw-bold text-dark text-truncate mb-2">${item.title}</h6>
+                                <p class="card-text text-muted small flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.description || ''}</p>
+                                <div class="d-flex align-items-center mb-2 small text-warning">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    <span class="text-dark fw-bold ms-1">4.9</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2">
+                                    <span class="text-danger fw-bold fs-5">${Number(item.price).toLocaleString('vi-VN')} đ</span>
+                                    <a href="activity-detail.html?id=${item.activityId}" class="btn btn-sm btn-orange rounded-pill px-3" onclick="event.stopPropagation();">Đặt vé</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                container.innerHTML = `<div class="col-12 text-center text-danger py-4">Lỗi đọc API: ${err.message}</div>`;
+            }
+        }
+
+        function goToDetail(id) {
+            window.location.href = `activity-detail.html?id=${id}`;
+        }
+
+        function quickSearch(k) {
+            document.getElementById('txtSearch').value = k;
+            loadActivities(k);
+        }
+
+        async function generateVisualAiPlan() {
+            const dest = document.getElementById('aiDest').value.trim();
+            const days = document.getElementById('aiDays').value;
+            const budget = document.getElementById('aiBudget').value.trim() || 'Hợp lý';
+            const pref = document.getElementById('aiPref').value.trim() || 'Khám phá tổng hợp';
+
+            if (!dest) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu điểm đến', text: 'Vui lòng nhập điểm đến du lịch bạn muốn đi!', confirmButtonColor: '#ff5b00' });
+                return;
+            }
+
+            document.getElementById('aiPlanLoading').classList.remove('d-none');
+            document.getElementById('aiVisualResultArea').classList.add('d-none');
+
+            try {
+                const res = await fetch('/api/ai/planner-visual', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ destination: dest, days, budget, preferences: pref })
+                });
+                const data = await res.json();
+
+                document.getElementById('aiAdviceText').innerText = data.advice;
+
+                const container = document.getElementById('visualTimelineContainer');
+                const acts = data.activities || [];
+                const dayCount = (days.includes('1')) ? 1 : (days.includes('3') ? 3 : 2);
+
+                const mealImages = [
+                    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
+                    "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=600&q=80"
+                ];
+
+                let html = '';
+                let actIdx = 0;
+
+                for (let d = 1; d <= dayCount; d++) {
+                    const morningAct = acts[actIdx % acts.length] || {};
+                    actIdx++;
+                    const afternoonAct = acts[actIdx % acts.length] || {};
+                    actIdx++;
+
+                    html += `
+                        <div class="mb-4">
+                            <div class="timeline-day-badge"><i class="fa-regular fa-calendar-days me-2"></i>NGÀY ${d}: TRẢI NGHIỆM ${dest.toUpperCase()}</div>
+                            <div class="row g-3">
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card h-100 plan-place-card">
+                                        <img src="${morningAct.imageUrl || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'}" class="plan-place-img" alt="${morningAct.title || ''}">
+                                        <div class="card-body p-3 d-flex flex-column">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="badge badge-morning time-tag">Sáng (08:00 - 11:30)</span>
+                                                <span class="badge bg-light text-secondary border">Check-in</span>
+                                            </div>
+                                            <h6 class="fw-bold mb-1 text-truncate">${morningAct.title || 'Điểm tham quan buổi sáng'}</h6>
+                                            <p class="text-muted small flex-grow-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${morningAct.description || 'Khám phá danh lam thắng cảnh và chụp ảnh check-in.'}</p>
+                                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                                <span class="text-danger fw-bold small">${Number(morningAct.price || 0).toLocaleString('vi-VN')} đ</span>
+                                                <a href="activity-detail.html?id=${morningAct.activityId}" class="btn btn-sm btn-outline-warning text-dark fw-bold rounded-pill px-2">Đặt vé</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card h-100 plan-place-card">
+                                        <img src="${mealImages[0]}" class="plan-place-img" alt="Ẩm thực trưa">
+                                        <div class="card-body p-3 d-flex flex-column">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="badge badge-noon time-tag">Trưa (11:30 - 13:30)</span>
+                                                <span class="badge bg-light text-secondary border">Ẩm thực</span>
+                                            </div>
+                                            <h6 class="fw-bold mb-1 text-truncate">Thưởng Thức Đặc Sản Địa Phương</h6>
+                                            <p class="text-muted small flex-grow-1">Nghỉ ngơi, thưởng thức các món ăn nức tiếng vùng miền và nạp năng lượng.</p>
+                                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                                <span class="text-success fw-bold small"><i class="fa-solid fa-utensils me-1"></i>Trải nghiệm tự do</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card h-100 plan-place-card">
+                                        <img src="${afternoonAct.imageUrl || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'}" class="plan-place-img" alt="${afternoonAct.title || ''}">
+                                        <div class="card-body p-3 d-flex flex-column">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="badge badge-afternoon time-tag">Chiều (14:00 - 17:30)</span>
+                                                <span class="badge bg-light text-secondary border">Khám phá</span>
+                                            </div>
+                                            <h6 class="fw-bold mb-1 text-truncate">${afternoonAct.title || 'Điểm tham quan buổi chiều'}</h6>
+                                            <p class="text-muted small flex-grow-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${afternoonAct.description || 'Tham gia trải nghiệm vui chơi, khám phá văn hóa và chụp ảnh lưu niệm.'}</p>
+                                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                                <span class="text-danger fw-bold small">${Number(afternoonAct.price || 0).toLocaleString('vi-VN')} đ</span>
+                                                <a href="activity-detail.html?id=${afternoonAct.activityId}" class="btn btn-sm btn-outline-warning text-dark fw-bold rounded-pill px-2">Đặt vé</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card h-100 plan-place-card">
+                                        <img src="${mealImages[1]}" class="plan-place-img" alt="Phố đêm">
+                                        <div class="card-body p-3 d-flex flex-column">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="badge badge-evening time-tag">Tối (18:30 - 21:30)</span>
+                                                <span class="badge bg-light text-secondary border">Dạo phố</span>
+                                            </div>
+                                            <h6 class="fw-bold mb-1 text-truncate">Chợ Đêm & Ngắm Cảnh Lung Linh</h6>
+                                            <p class="text-muted small flex-grow-1">Dạo phố đi bộ, thưởng thức ẩm thực đường phố và ngắm cảnh đêm lung linh sắc màu.</p>
+                                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                                <span class="text-primary fw-bold small"><i class="fa-solid fa-moon me-1"></i>Khám phá tự do</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = html;
+                document.getElementById('aiVisualResultArea').classList.remove('d-none');
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể tạo lịch trình: ' + err.message });
+            } finally {
+                document.getElementById('aiPlanLoading').classList.add('d-none');
+            }
+        }
+
+        async function doRegister() {
+            const body = {
+                fullName: document.getElementById('regName').value.trim(),
+                email: document.getElementById('regEmail').value.trim(),
+                password: document.getElementById('regPass').value,
+                phone: document.getElementById('regPhone').value.trim()
+            };
+
+            if (!body.fullName || !body.email || !body.password) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng nhập họ tên, email và mật khẩu!', confirmButtonColor: '#ff5b00' });
+                return;
+            }
+
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await res.json();
+            if (res.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đăng Ký Thành Công!',
+                    text: 'Tài khoản của bạn đã được tạo thành công.',
+                    confirmButtonColor: '#ff5b00',
+                    confirmButtonText: 'Đăng nhập ngay'
+                }).then(() => new bootstrap.Modal(document.getElementById('loginModal')).show());
+            } else {
+                Swal.fire({ icon: 'error', title: 'Đăng ký thất bại', text: data.message || 'Lỗi đăng ký!', confirmButtonColor: '#ff5b00' });
+            }
+        }
+
+        async function doLogin() {
+            const body = {
+                email: document.getElementById('loginEmail').value.trim(),
+                password: document.getElementById('loginPass').value
+            };
+            if (!body.email || !body.password) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng nhập email và mật khẩu!', confirmButtonColor: '#ff5b00' });
+                return;
+            }
+
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            if (res.ok) {
+                const user = await res.json();
+                localStorage.setItem('user', JSON.stringify(user));
+                updateAuthUI();
+                bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Đăng Nhập Thành Công',
+                    text: `Chào mừng ${user.fullName} quay trở lại!`,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+            } else {
+                Swal.fire({ icon: 'error', title: 'Đăng nhập thất bại', text: 'Sai email hoặc mật khẩu!', confirmButtonColor: '#ff5b00' });
+            }
+        }
+
+        function updateAuthUI() {
+            const userStr = localStorage.getItem('user');
+            const nav = document.getElementById('authNavArea');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                nav.innerHTML = `
+                    <div class="dropdown">
+                        <button class="btn btn-outline-warning text-dark dropdown-toggle rounded-pill fw-bold btn-sm" type="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-user-circle text-warning me-1"></i>${user.fullName}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+                            ${user.roleId === 1 ? `
+                                <li><a class="dropdown-item py-2 text-danger fw-bold" href="admin.html"><i class="fa-solid fa-gauge-high me-2"></i>Trang Quản Trị (Admin)</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                            ` : ''}
+                            <li><a class="dropdown-item py-2" href="profile.html"><i class="fa-solid fa-id-badge text-warning me-2"></i>Hồ sơ cá nhân</a></li>
+                            <li><a class="dropdown-item py-2" href="my-bookings.html"><i class="fa-solid fa-ticket text-primary me-2"></i>Vé đã đặt & E-Ticket</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item py-2 text-danger" href="javascript:void(0)" onclick="logout()"><i class="fa-solid fa-power-off me-2"></i>Đăng xuất</a></li>
+                        </ul>
+                    </div>
+                `;
+            } else {
+                nav.innerHTML = `
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
+                    <button class="btn btn-sm btn-orange rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#registerModal">Đăng ký</button>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            updateAuthUI();
+            Swal.fire({
+                icon: 'info',
+                title: 'Đã Đăng Xuất',
+                text: 'Hẹn gặp lại bạn trong chuyến đi tiếp theo!',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+
+        function toggleChat() {
+            const win = document.getElementById('chatWindow');
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function askQuick(questionText) {
+            document.getElementById('chatInput').value = questionText;
+            sendChat();
+        }
+
+        async function sendChat() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const box = document.getElementById('chatMsgs');
+            box.innerHTML += `<div class="chat-msg user">${msg}</div>`;
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+
+            const botTyping = document.createElement('div');
+            botTyping.className = 'chat-msg bot';
+            botTyping.innerText = 'Em đang tra cứu thông tin cho bạn... ✨';
+            box.appendChild(botTyping);
+            box.scrollTop = box.scrollHeight;
+
+            try {
+                const res = await fetch('/api/ai/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: msg,
+                        history: chatHistory.slice(-6)
+                    })
+                });
+                const data = await res.json();
+                const reply = data.reply || 'Dạ em chưa nhận được phản hồi. Bạn hỏi lại giúp em nhé!';
+                botTyping.innerText = reply;
+
+                chatHistory.push({ sender: 'user', text: msg });
+                chatHistory.push({ sender: 'bot', text: reply });
+            } catch {
+                botTyping.innerText = 'Hiện tại đường truyền mạng đang bận, bạn thử gửi lại giúp em nhé!';
+            }
+            box.scrollTop = box.scrollHeight;
+        }
+
+        window.onload = () => {
+            loadActivities();
+            updateAuthUI();
+        };
+    </script>
+</body>
+</html>

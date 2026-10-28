@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Trị Hệ Thống - TTLooks Admin</title>
+    <!-- Bootstrap 5, FontAwesome & SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --brand-orange: #ff5b00;
+            --brand-orange-hover: #e04f00;
+        }
+        body { background-color: #f1f5f9; }
+        .navbar-brand { font-weight: 800; color: var(--brand-orange) !important; font-size: 1.5rem; }
+        .btn-orange { background-color: var(--brand-orange); color: #fff; border: none; font-weight: 600; }
+        .btn-orange:hover { background-color: var(--brand-orange-hover); color: #fff; }
+
+        .stat-card {
+            border: none;
+            border-radius: 16px;
+            background: #fff;
+            padding: 22px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-icon {
+            width: 55px; height: 55px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--brand-orange) !important;
+            font-weight: 700;
+        }
+        .nav-pills .nav-link {
+            color: #475569;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 10px 18px;
+        }
+        .admin-box {
+            border: none;
+            border-radius: 16px;
+            background: #fff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        .ticket-code-tag {
+            font-family: monospace;
+            background: #fff3eb;
+            color: #ff5b00;
+            padding: 3px 8px;
+            border-radius: 6px;
+            border: 1px solid #ffd8c2;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar Quản Trị -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="/admin.html"><i class="fa-solid fa-compass me-2"></i>TTLooks <span class="badge bg-danger fs-6 ms-1">Admin</span></a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <span class="small text-muted"><i class="fa-solid fa-shield-halved text-success me-1"></i>Phiên Quản Trị Viên</span>
+                <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Xem Website Khách</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4 py-4">
+
+        <!-- THẺ THỐNG KÊ DOANH THU KPI -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div>
+                        <small class="text-muted d-block fw-semibold mb-1">TỔNG DOANH THU</small>
+                        <h4 class="fw-bold mb-0 text-success" id="kpiRevenue">0 đ</h4>
+                    </div>
+                    <div class="stat-icon bg-success-subtle text-success"><i class="fa-solid fa-sack-dollar"></i></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div>
+                        <small class="text-muted d-block fw-semibold mb-1">VÉ ĐÃ THANH TOÁN</small>
+                        <h4 class="fw-bold mb-0 text-primary" id="kpiTickets">0 vé</h4>
+                    </div>
+                    <div class="stat-icon bg-primary-subtle text-primary"><i class="fa-solid fa-ticket"></i></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div>
+                        <small class="text-muted d-block fw-semibold mb-1">TỔNG THÀNH VIÊN</small>
+                        <h4 class="fw-bold mb-0 text-warning" id="kpiUsers">0</h4>
+                    </div>
+                    <div class="stat-icon bg-warning-subtle text-warning"><i class="fa-solid fa-users"></i></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div>
+                        <small class="text-muted d-block fw-semibold mb-1">TRẢI NGHIỆM ĐANG MỞ</small>
+                        <h4 class="fw-bold mb-0 text-danger" id="kpiActivities">0</h4>
+                    </div>
+                    <div class="stat-icon bg-danger-subtle text-danger"><i class="fa-solid fa-earth-americas"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS ĐIỀU HƯỚNG QUẢN TRỊ -->
+        <ul class="nav nav-pills mb-3 gap-2" id="adminTabs">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-bookings" onclick="loadAdminBookings()">
+                    <i class="fa-solid fa-list-check me-2"></i>Quản Lý Đơn Vé & E-Ticket
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-activities" onclick="loadAdminActivities()">
+                    <i class="fa-solid fa-ticket-simple me-2"></i>Kho Vé & Trải Nghiệm
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-users" onclick="loadAdminUsers()">
+                    <i class="fa-solid fa-users-gear me-2"></i>Quản Trị Người Dùng
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+
+            <!-- TAB 1: QUẢN LÝ ĐƠN VÉ & DUYỆT ĐƠN -->
+            <div class="tab-pane fade show active" id="tab-bookings">
+                <div class="admin-box p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-dark mb-0">Danh Sách Đơn Đặt Vé Toàn Hệ Thống</h5>
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill" onclick="loadAdminBookings()"><i class="fa-solid fa-arrows-rotate me-1"></i>Làm mới</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light small">
+                                <tr>
+                                    <th>Mã Đơn</th>
+                                    <th>Mã Vé QR (E-Ticket)</th>
+                                    <th>Khách Hàng</th>
+                                    <th>Trải Nghiệm</th>
+                                    <th>Ngày Đi</th>
+                                    <th>SL</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Trạng Thái</th>
+                                    <th class="text-end">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblBookingsBody" class="small">
+                                <tr><td colspan="9" class="text-center py-4 text-muted">Đang nạp dữ liệu đơn vé...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: QUẢN LÝ KHO VÉ DU LỊCH -->
+            <div class="tab-pane fade" id="tab-activities">
+                <div class="admin-box p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-dark mb-0">Kho Trải Nghiệm & Vé Du Lịch</h5>
+                        <button class="btn btn-orange btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#modalAddActivity">
+                            <i class="fa-solid fa-plus me-1"></i>Thêm Vé Mới
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light small">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Ảnh</th>
+                                    <th>Tên Trải Nghiệm</th>
+                                    <th>Đơn Giá</th>
+                                    <th>Trạng Thái</th>
+                                    <th class="text-end">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblActivitiesBody" class="small">
+                                <tr><td colspan="6" class="text-center py-4 text-muted">Đang nạp kho vé...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: QUẢN TRỊ TÀI KHOẢN NGƯỜI DÙNG -->
+            <div class="tab-pane fade" id="tab-users">
+                <div class="admin-box p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-dark mb-0">Danh Sách Tài Khoản Thành Viên</h5>
+                        <button class="btn btn-outline-secondary btn-sm rounded-pill" onclick="loadAdminUsers()"><i class="fa-solid fa-arrows-rotate me-1"></i>Làm mới</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light small">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ và Tên</th>
+                                    <th>Email</th>
+                                    <th>Số Điện Thoại</th>
+                                    <th>Ngày Đăng Ký</th>
+                                    <th>Vai Trò</th>
+                                    <th class="text-end">Phân Quyền</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblUsersBody" class="small">
+                                <tr><td colspan="7" class="text-center py-4 text-muted">Đang nạp danh sách tài khoản...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Modal Thêm Vé Mới -->
+    <div class="modal fade" id="modalAddActivity" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-orange text-white" style="background:var(--brand-orange);">
+                    <h5 class="modal-title fw-bold">Thêm Vé / Trải Nghiệm Mới</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Tên trải nghiệm du lịch</label>
+                        <input type="text" id="addActTitle" class="form-control" placeholder="Ví dụ: Vé Cáp Treo Fansipan Legend Sapa">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Đơn giá vé (VNĐ)</label>
+                        <input type="number" id="addActPrice" class="form-control" placeholder="850000">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Link ảnh (URL Unsplash hoặc CDN)</label>
+                        <input type="text" id="addActImg" class="form-control" placeholder="https://images.unsplash.com/photo-...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Mô tả ngắn</label>
+                        <textarea id="addActDesc" class="form-control" rows="3" placeholder="Mô tả điểm nhấn và trải nghiệm..."></textarea>
+                    </div>
+                    <button class="btn btn-orange w-100 py-2 rounded-pill fw-bold" onclick="submitCreateActivity()">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Lưu Vào CSDL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Kiểm tra phân quyền Admin
+        const userStr = localStorage.getItem('user');
+        if (!userStr) {
+            Swal.fire({ icon: 'warning', title: 'Yêu cầu đăng nhập', text: 'Vui lòng đăng nhập quyền Admin!', confirmButtonColor: '#ff5b00' })
+                .then(() => window.location.href = '/');
+        } else {
+            const user = JSON.parse(userStr);
+            if (user.roleId !== 1) {
+                Swal.fire({ icon: 'error', title: 'Từ chối truy cập', text: 'Tài khoản của bạn không có quyền Quản trị viên (Admin)!', confirmButtonColor: '#ff5b00' })
+                    .then(() => window.location.href = '/');
+            }
+        }
+
+        // 1. NẠP KPI THỐNG KÊ
+        async function loadKPI() {
+            try {
+                const res = await fetch('/api/admin/stats');
+                const data = await res.json();
+                document.getElementById('kpiRevenue').innerText = Number(data.revenue).toLocaleString('vi-VN') + ' đ';
+                document.getElementById('kpiTickets').innerText = data.paidTickets + ' vé';
+                document.getElementById('kpiUsers').innerText = data.totalUsers + ' người';
+                document.getElementById('kpiActivities').innerText = data.totalActivities + ' tour/vé';
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // 2. NẠP VÀ QUẢN LÝ ĐƠN VÉ (BOOKINGS)
+        async function loadAdminBookings() {
+            const tbody = document.getElementById('tblBookingsBody');
+            try {
+                const res = await fetch('/api/admin/bookings');
+                const list = await res.json();
+                if (!list || list.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted">Chưa có đơn đặt vé nào.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = list.map(item => `
+                    <tr>
+                        <td class="fw-bold text-secondary">#${item.bookingId}</td>
+                        <td><span class="ticket-code-tag">${item.ticketCode}</span></td>
+                        <td>
+                            <strong class="text-dark d-block">${item.customerName}</strong>
+                            <small class="text-muted">${item.customerPhone} &bull; ${item.customerEmail}</small>
+                        </td>
+                        <td><strong>${item.activityTitle}</strong></td>
+                        <td>${item.travelDate}</td>
+                        <td class="text-center fw-bold">${item.quantity}</td>
+                        <td class="text-danger fw-bold">${Number(item.totalPrice).toLocaleString('vi-VN')} đ</td>
+                        <td>
+                            <span class="badge ${item.status === 'Đã thanh toán' ? 'bg-success' : (item.status === 'Đã hủy' ? 'bg-danger' : 'bg-warning text-dark')}">
+                                ${item.status}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            ${item.status === 'Chờ thanh toán' ? `
+                                <button class="btn btn-sm btn-success rounded-pill px-2" onclick="updateBookingStatus(${item.bookingId}, 'Đã thanh toán')">Duyệt</button>
+                                <button class="btn btn-sm btn-outline-danger rounded-pill px-2" onclick="updateBookingStatus(${item.bookingId}, 'Đã hủy')">Hủy</button>
+                            ` : `
+                                <span class="text-muted small"><i class="fa-solid fa-check text-success me-1"></i>Hoàn tất</span>
+                            `}
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="9" class="text-center text-danger py-4">Lỗi tải dữ liệu: ${err.message}</td></tr>`;
+            }
+        }
+
+        async function updateBookingStatus(id, status) {
+            try {
+                const res = await fetch(`/api/admin/bookings/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                const data = await res.json();
+                Swal.fire({ icon: 'success', title: 'Thành công', text: data.message, timer: 1500, showConfirmButton: false });
+                loadAdminBookings();
+                loadKPI();
+            } catch (e) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: e.message });
+            }
+        }
+
+        // 3. NẠP VÀ QUẢN LÝ KHO VÉ (ACTIVITIES)
+        async function loadAdminActivities() {
+            const tbody = document.getElementById('tblActivitiesBody');
+            try {
+                const res = await fetch('/api/admin/activities');
+                const list = await res.json();
+                tbody.innerHTML = list.map(item => `
+                    <tr>
+                        <td class="fw-bold text-secondary">#${item.activityId}</td>
+                        <td><img src="${item.imageUrl}" class="rounded-3" style="width: 55px; height: 40px; object-fit: cover;"></td>
+                        <td>
+                            <strong class="text-dark">${item.title}</strong>
+                            <p class="text-muted small mb-0 text-truncate" style="max-width: 320px;">${item.description}</p>
+                        </td>
+                        <td class="text-danger fw-bold">${Number(item.price).toLocaleString('vi-VN')} đ</td>
+                        <td><span class="badge ${item.isActive ? 'bg-success' : 'bg-secondary'}">${item.isActive ? 'Mở bán' : 'Tạm ẩn'}</span></td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-danger rounded-pill" onclick="deleteActivity(${item.activityId})"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4">Lỗi: ${err.message}</td></tr>`;
+            }
+        }
+
+        async function submitCreateActivity() {
+            const title = document.getElementById('addActTitle').value.trim();
+            const price = Number(document.getElementById('addActPrice').value);
+            const img = document.getElementById('addActImg').value.trim();
+            const desc = document.getElementById('addActDesc').value.trim();
+
+            if (!title || !price) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu dữ liệu', text: 'Vui lòng nhập tên vé và đơn giá!', confirmButtonColor: '#ff5b00' });
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/admin/activities', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, price, imageUrl: img, description: desc })
+                });
+                const data = await res.json();
+                bootstrap.Modal.getInstance(document.getElementById('modalAddActivity')).hide();
+                Swal.fire({ icon: 'success', title: 'Thành công', text: data.message, timer: 1500, showConfirmButton: false });
+                loadAdminActivities();
+                loadKPI();
+            } catch (e) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: e.message });
+            }
+        }
+
+        async function deleteActivity(id) {
+            const confirm = await Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: 'Bạn có chắc chắn muốn xóa hoặc ẩn trải nghiệm này?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý xóa'
+            });
+            if (confirm.isConfirmed) {
+                const res = await fetch(`/api/admin/activities/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                Swal.fire({ icon: 'success', title: 'Đã xử lý', text: data.message, timer: 1500, showConfirmButton: false });
+                loadAdminActivities();
+                loadKPI();
+            }
+        }
+
+        // 4. NẠP VÀ PHÂN QUYỀN NGƯỜI DÙNG (USERS)
+        async function loadAdminUsers() {
+            const tbody = document.getElementById('tblUsersBody');
+            try {
+                const res = await fetch('/api/admin/users');
+                const list = await res.json();
+                tbody.innerHTML = list.map(item => `
+                    <tr>
+                        <td class="fw-bold text-secondary">#${item.userId}</td>
+                        <td><strong>${item.fullName}</strong></td>
+                        <td>${item.email}</td>
+                        <td>${item.phoneNumber || '<em class="text-muted">Chưa có</em>'}</td>
+                        <td>${item.createdAt}</td>
+                        <td>
+                            <span class="badge ${item.roleId === 1 ? 'bg-danger' : 'bg-primary'}">
+                                ${item.roleId === 1 ? 'Quản trị viên (Admin)' : 'Khách hàng'}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm ${item.roleId === 1 ? 'btn-outline-secondary' : 'btn-outline-warning text-dark fw-bold'} rounded-pill" onclick="toggleUserRole(${item.userId}, ${item.roleId})">
+                                ${item.roleId === 1 ? 'Hạ quyền Khách' : 'Nâng quyền Admin'}
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">Lỗi: ${err.message}</td></tr>`;
+            }
+        }
+
+        async function toggleUserRole(userId, currentRole) {
+            const newRole = currentRole === 1 ? 2 : 1;
+            const res = await fetch(`/api/admin/users/${userId}/role`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ roleId: newRole })
+            });
+            const data = await res.json();
+            Swal.fire({ icon: 'success', title: 'Thành công', text: data.message, timer: 1500, showConfirmButton: false });
+            loadAdminUsers();
+        }
+
+        window.onload = () => {
+            loadKPI();
+            loadAdminBookings();
+        };
+    </script>
+</body>
+</html>

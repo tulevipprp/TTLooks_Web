@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ Cá Nhân - TTLooks</title>
+    <!-- Bootstrap 5, FontAwesome & SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --brand-orange: #ff5b00;
+            --brand-orange-hover: #e04f00;
+        }
+        .navbar-brand { font-weight: 800; color: var(--brand-orange) !important; font-size: 1.5rem; }
+        .btn-orange { background-color: var(--brand-orange); color: #fff; border: none; font-weight: 600; }
+        .btn-orange:hover { background-color: var(--brand-orange-hover); color: #fff; }
+        .nav-pills .nav-link.active { background-color: var(--brand-orange) !important; }
+        .nav-pills .nav-link { color: #555; font-weight: 600; border-radius: 10px; }
+        .profile-card { border: none; border-radius: 16px; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .avatar-circle {
+            width: 90px; height: 90px; border-radius: 50%; background: #fff3eb;
+            color: var(--brand-orange); font-size: 2.8rem; display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 15px; border: 3px solid #ffe2d1;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-compass me-2"></i>TTLooks</a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <a href="my-bookings.html" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-semibold">
+                    <i class="fa-solid fa-ticket me-1 text-warning"></i> Vé Của Tôi
+                </a>
+                <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Trang Chủ
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4" style="max-width: 850px;">
+        <div class="row g-4">
+            
+            <!-- Cột trái: Tóm tắt thông tin -->
+            <div class="col-md-4">
+                <div class="profile-card p-4 text-center">
+                    <div class="avatar-circle">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <h5 class="fw-bold mb-1" id="sideUserName">Đang tải...</h5>
+                    <p class="text-muted small mb-3" id="sideUserEmail">...</p>
+                    <div class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill small mb-3">
+                        <i class="fa-solid fa-gem me-1"></i>Thành Viên TTLooks
+                    </div>
+                    <hr>
+                    <div class="text-start small text-muted">
+                        <div class="mb-2"><i class="fa-regular fa-calendar-check me-2 text-warning"></i>Ngày tham gia: <strong id="sideCreatedAt" class="text-dark">...</strong></div>
+                        <div><i class="fa-solid fa-shield-halved me-2 text-success"></i>Bảo mật tài khoản: <strong class="text-success">Đã kích hoạt</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột phải: Form cập nhật thông tin & Đổi mật khẩu -->
+            <div class="col-md-8">
+                <div class="profile-card p-4">
+                    
+                    <!-- Tabs chuyển đổi -->
+                    <ul class="nav nav-pills mb-4 nav-fill p-1 bg-light rounded-3" id="profileTab" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="info-tab" data-bs-toggle="pill" data-bs-target="#info-pane">
+                                <i class="fa-solid fa-id-card me-1"></i> Thông Tin Cá Nhân
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="pwd-tab" data-bs-toggle="pill" data-bs-target="#pwd-pane">
+                                <i class="fa-solid fa-key me-1"></i> Đổi Mật Khẩu
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <!-- TAB 1: THÔNG TIN CÁ NHÂN -->
+                        <div class="tab-pane fade show active" id="info-pane">
+                            <h6 class="fw-bold mb-3 text-dark">Cập Nhật Thông Tin Liên Hệ</h6>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Email đăng nhập (Không thể thay đổi)</label>
+                                <input type="email" id="txtEmail" class="form-control bg-light" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Họ và tên</label>
+                                <input type="text" id="txtName" class="form-control" placeholder="Nguyễn Văn A">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold">Số điện thoại liên hệ</label>
+                                <input type="text" id="txtPhone" class="form-control" placeholder="0901234567">
+                            </div>
+                            <button class="btn btn-orange w-100 py-2 rounded-pill fw-bold" onclick="updateProfile()">
+                                <i class="fa-solid fa-floppy-disk me-1"></i> Lưu Thay Đổi
+                            </button>
+                        </div>
+
+                        <!-- TAB 2: ĐỔI MẬT KHẨU -->
+                        <div class="tab-pane fade" id="pwd-pane">
+                            <h6 class="fw-bold mb-3 text-dark">Đổi Mật Khẩu Bảo Mật</h6>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Mật khẩu hiện tại</label>
+                                <input type="password" id="txtOldPass" class="form-control" placeholder="Nhập mật khẩu đang dùng">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Mật khẩu mới</label>
+                                <input type="password" id="txtNewPass" class="form-control" placeholder="Mật khẩu mới ít nhất 6 ký tự">
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold">Xác nhận mật khẩu mới</label>
+                                <input type="password" id="txtConfirmPass" class="form-control" placeholder="Nhập lại mật khẩu mới">
+                            </div>
+                            <button class="btn btn-orange w-100 py-2 rounded-pill fw-bold" onclick="changePassword()">
+                                <i class="fa-solid fa-lock me-1"></i> Cập Nhật Mật Khẩu
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const userStr = localStorage.getItem('user');
+        if (!userStr) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Yêu cầu đăng nhập',
+                text: 'Vui lòng đăng nhập để xem thông tin hồ sơ!',
+                confirmButtonColor: '#ff5b00'
+            }).then(() => window.location.href = '/');
+        }
+
+        const currentUser = JSON.parse(userStr);
+
+        async function loadProfile() {
+            try {
+                const res = await fetch(`/api/user/profile/${currentUser.userId}`);
+                if (!res.ok) throw new Error('Không tải được dữ liệu');
+                const data = await res.json();
+
+                document.getElementById('sideUserName').innerText = data.fullName;
+                document.getElementById('sideUserEmail').innerText = data.email;
+                document.getElementById('sideCreatedAt').innerText = data.createdAt || 'Mới tham gia';
+
+                document.getElementById('txtEmail').value = data.email;
+                document.getElementById('txtName').value = data.fullName;
+                document.getElementById('txtPhone').value = data.phoneNumber || '';
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: err.message, confirmButtonColor: '#ff5b00' });
+            }
+        }
+
+        async function updateProfile() {
+            const name = document.getElementById('txtName').value.trim();
+            const phone = document.getElementById('txtPhone').value.trim();
+
+            if (!name) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Họ và tên không được để trống!', confirmButtonColor: '#ff5b00' });
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/user/profile/${currentUser.userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullName: name, phoneNumber: phone })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    currentUser.fullName = name;
+                    currentUser.phoneNumber = phone;
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    
+                    document.getElementById('sideUserName').innerText = name;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành Công!',
+                        text: 'Thông tin hồ sơ của bạn đã được cập nhật.',
+                        confirmButtonColor: '#ff5b00'
+                    });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Thất bại', text: data.message || 'Lỗi cập nhật', confirmButtonColor: '#ff5b00' });
+                }
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Lỗi kết nối', text: err.message, confirmButtonColor: '#ff5b00' });
+            }
+        }
+
+        async function changePassword() {
+            const oldPass = document.getElementById('txtOldPass').value;
+            const newPass = document.getElementById('txtNewPass').value;
+            const confirmPass = document.getElementById('txtConfirmPass').value;
+
+            if (!oldPass || !newPass || !confirmPass) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng nhập đầy đủ các trường mật khẩu!', confirmButtonColor: '#ff5b00' });
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                Swal.fire({ icon: 'warning', title: 'Không khớp', text: 'Mật khẩu mới và xác nhận mật khẩu không giống nhau!', confirmButtonColor: '#ff5b00' });
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/user/change-password/${currentUser.userId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ oldPassword: oldPass, newPassword: newPass })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    document.getElementById('txtOldPass').value = '';
+                    document.getElementById('txtNewPass').value = '';
+                    document.getElementById('txtConfirmPass').value = '';
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Đổi Mật Khẩu Thành Công!',
+                        text: 'Mật khẩu mới đã được lưu an toàn.',
+                        confirmButtonColor: '#ff5b00'
+                    });
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Lỗi', text: data.message || 'Không thể đổi mật khẩu!', confirmButtonColor: '#ff5b00' });
+                }
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Lỗi kết nối', text: err.message, confirmButtonColor: '#ff5b00' });
+            }
+        }
+
+        window.onload = loadProfile;
+    </script>
+</body>
+</html>

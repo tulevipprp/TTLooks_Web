@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Trải Nghiệm - TTLooks</title>
+    <!-- Bootstrap 5, FontAwesome & SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --brand-orange: #ff5b00;
+            --brand-orange-hover: #e04f00;
+        }
+
+        .navbar-brand { font-weight: 800; color: var(--brand-orange) !important; font-size: 1.5rem; }
+        .btn-orange { background-color: var(--brand-orange); color: #fff; border: none; font-weight: 700; }
+        .btn-orange:hover { background-color: var(--brand-orange-hover); color: #fff; }
+
+        /* Bố cục thư viện ảnh Mosaic Klook */
+        .photo-mosaic-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-gap: 10px;
+            border-radius: 16px;
+            overflow: hidden;
+            height: 380px;
+            margin-bottom: 25px;
+        }
+        .mosaic-main { width: 100%; height: 100%; object-fit: cover; }
+        .mosaic-side-grid { display: grid; grid-template-rows: 1fr 1fr; grid-gap: 10px; height: 100%; }
+        .mosaic-side-grid img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Hộp đặt vé cố định Sticky Box */
+        .sticky-booking-card {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 85px;
+            z-index: 99;
+            background: #ffffff;
+            border: 1px solid #ebebeb;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        /* Thẻ gói dịch vụ */
+        .package-item {
+            border: 2px solid #e9ecef;
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 14px;
+            background: #fff;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .package-item:hover { border-color: #ffb792; }
+        .package-item.selected {
+            border-color: var(--brand-orange);
+            background-color: #fffaf7;
+        }
+
+        .guide-section h5::before {
+            content: "";
+            display: inline-block;
+            width: 5px;
+            height: 18px;
+            background-color: var(--brand-orange);
+            margin-right: 10px;
+            border-radius: 3px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-compass me-2"></i>TTLooks</a>
+            <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i>Về Trang Chủ</a>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+
+        <!-- Thư viện ảnh Mosaic -->
+        <div class="photo-mosaic-grid">
+            <div>
+                <img id="detailImgMain" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" class="mosaic-main" alt="Trải nghiệm">
+            </div>
+            <div class="mosaic-side-grid">
+                <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80" alt="Sub 1">
+                <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80" alt="Sub 2">
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Cột trái: Thông tin chi tiết, Các gói lựa chọn & Hướng dẫn -->
+            <div class="col-lg-7">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-warning text-dark fw-bold px-2 py-1"><i class="fa-solid fa-crown me-1"></i>Trải Nghiệm Nổi Bật</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle"><i class="fa-solid fa-bolt me-1"></i>Xác nhận tức thì</span>
+                </div>
+                <h2 class="fw-bold text-dark mb-2" id="detailTitle">Đang tải tên trải nghiệm...</h2>
+                <div class="d-flex align-items-center gap-3 mb-4 small text-muted">
+                    <span class="text-warning fw-bold"><i class="fa-solid fa-star"></i> 4.9/5</span>
+                    <span>(2.4k+ đánh giá)</span>
+                    <span>&bull; Đã đặt hơn 15.000+ lượt</span>
+                </div>
+
+                <!-- CÁC GÓI LỰA CHỌN GIÁ -->
+                <div class="guide-section mb-4">
+                    <h5 class="fw-bold mb-3">Các Gói Dịch Vụ & Lựa Chọn Giá (Packages)</h5>
+
+                    <!-- Gói 1: Vé tiêu chuẩn -->
+                    <div class="package-item selected" id="pkg-1" onclick="choosePackage(1.0, 'Vé Tiêu Chuẩn', this)">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h6 class="fw-bold mb-1">[Vé Tiêu Chuẩn] Vào Cổng Trực Tiếp & Toàn Bộ Trò Chơi Ngoài Trời</h6>
+                        </div>
+                        <p class="text-muted small mb-2">Bao gồm vé vào cổng tham quan, áp dụng đúng ngày đã chọn.</p>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <span class="text-danger fw-bold fs-5" id="pkgPrice1">0 đ</span>
+                            <span class="badge bg-danger-subtle text-danger pkg-badge">Đang chọn</span>
+                        </div>
+                    </div>
+
+                    <!-- Gói 2: Vé kèm Buffet trưa -->
+                    <div class="package-item" id="pkg-2" onclick="choosePackage(1.35, 'Trọn Gói Kèm Buffet Trưa', this)">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h6 class="fw-bold mb-1">[Trọn Gói 1 Ngày] Vé Vào Cổng + Tiệc Buffet Trưa Quốc Tế</h6>
+                        </div>
+                        <p class="text-muted small mb-2">Thưởng thức tiệc buffet hơn 70 món đặc sản địa phương và quốc tế.</p>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <span class="text-danger fw-bold fs-5" id="pkgPrice2">0 đ</span>
+                            <span class="badge bg-secondary-subtle text-secondary pkg-badge">Chọn gói này</span>
+                        </div>
+                    </div>
+
+                    <!-- Gói 3: Vé VIP FastPass -->
+                    <div class="package-item" id="pkg-3" onclick="choosePackage(1.7, 'Vé VIP FastPass Ưu Tiên', this)">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h6 class="fw-bold mb-1">[Vé VIP FastPass] Lối Đi Ưu Tiên Không Chờ Đợi</h6>
+                        </div>
+                        <p class="text-muted small mb-2">Đặc quyền ưu tiên không cần xếp hàng tại tất cả các điểm check-in & cáp treo.</p>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <span class="text-danger fw-bold fs-5" id="pkgPrice3">0 đ</span>
+                            <span class="badge bg-secondary-subtle text-secondary pkg-badge">Chọn gói này</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mô tả trải nghiệm -->
+                <div class="guide-section mb-4">
+                    <h5 class="fw-bold mb-3">Mô Tả & Hướng Dẫn Trải Nghiệm</h5>
+                    <div class="p-3 bg-white border rounded-3 text-secondary small" style="line-height: 1.8;">
+                        <p id="detailDesc" class="mb-0" style="white-space: pre-line;">Đang nạp mô tả...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột phải: Web Form Đặt vé cố định (Sticky Box) -->
+            <div class="col-lg-5">
+                <div class="sticky-booking-card">
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Đơn giá gói đang chọn</small>
+                        <div class="text-danger fw-bold fs-3" id="displayUnitPrice">0 đ</div>
+                        <small class="text-success fw-bold" id="selectedPkgName">Gói: Vé Tiêu Chuẩn</small>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Họ và tên người nhận vé</label>
+                        <input type="text" id="custName" class="form-control" placeholder="Nguyễn Văn A">
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Email nhận mã vé</label>
+                            <input type="email" id="custEmail" class="form-control" placeholder="email@gmail.com">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Số điện thoại</label>
+                            <input type="text" id="custPhone" class="form-control" placeholder="0901234567">
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Ngày sử dụng vé</label>
+                            <input type="date" id="custDate" class="form-control">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Số lượng vé</label>
+                            <input type="number" id="custQty" class="form-control" value="1" min="1" max="20" onchange="calculateTotal()" onkeyup="calculateTotal()">
+                        </div>
+                    </div>
+
+                    <!-- Bảng tính tổng tiền -->
+                    <div class="alert alert-light border d-flex justify-content-between align-items-center mb-3">
+                        <span class="fw-bold">Tổng thanh toán:</span>
+                        <span class="fs-4 fw-bold text-danger" id="displayTotal">0 đ</span>
+                    </div>
+
+                    <button class="btn btn-orange w-100 py-3 rounded-pill" onclick="submitBookingForm()">
+                        <i class="fa-solid fa-qrcode me-2"></i>Tiến Hành Thanh Toán VietQR
+                    </button>
+                    <small class="text-muted text-center d-block mt-2" style="font-size: 0.75rem;">
+                        <i class="fa-solid fa-shield-halved text-success me-1"></i>Thanh toán chuyển khoản an toàn &bull; Xuất mã QR vé tức thì
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Thanh toán VietQR -->
+    <div class="modal fade" id="payModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow text-center p-3">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold text-success w-100"><i class="fa-solid fa-shield-halved me-1"></i>Thanh Toán Chuyển Khoản VietQR</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-2">Mở App ngân hàng bất kỳ để quét mã nhận vé tự động:</p>
+                    <div class="p-2 bg-white d-inline-block rounded-3 border mb-3">
+                        <img id="vietQrImg" src="" alt="Mã VietQR" class="img-fluid" style="max-height: 250px;">
+                    </div>
+                    <div class="alert alert-warning py-2 mb-3">
+                        <small class="d-block fw-bold" id="vietQrNote">Nội dung: TTLOOKS ...</small>
+                        <small class="text-danger fw-bold fs-5" id="vietQrAmount">0 đ</small>
+                    </div>
+                    <!-- Nút giả lập -->
+                    <button class="btn btn-success w-100 py-2 rounded-pill fw-bold" onclick="simulatePaymentSuccess()">
+                        <i class="fa-solid fa-circle-check me-1"></i> [MÔ PHỎNG] Tôi Đã Chuyển Khoản Thành Công
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const actId = urlParams.get('id');
+
+        let basePrice = 0;
+        let currentMultiplier = 1.0;
+        let currentPackageName = 'Vé Tiêu Chuẩn';
+        let currentBookingId = 0;
+        let generatedTicketCode = '';
+
+        async function loadDetail() {
+            if (!actId) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi đường dẫn',
+                    text: 'Không tìm thấy mã trải nghiệm du lịch!',
+                    confirmButtonColor: '#ff5b00'
+                }).then(() => window.location.href = '/');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/activities/${actId}`);
+                if (!res.ok) throw new Error('Không tìm thấy vé');
+                const data = await res.json();
+
+                document.getElementById('detailTitle').innerText = data.title;
+                document.getElementById('detailDesc').innerText = data.description || 'Chưa có mô tả chi tiết.';
+                if (data.imageUrl) document.getElementById('detailImgMain').src = data.imageUrl;
+
+                basePrice = Number(data.price);
+                initPackagePrices();
+
+                // Điền thông tin người dùng nếu đã đăng nhập
+                const userStr = localStorage.getItem('user');
+                if (userStr) {
+                    const user = JSON.parse(userStr);
+                    document.getElementById('custName').value = user.fullName;
+                    document.getElementById('custEmail').value = user.email;
+                }
+                document.getElementById('custDate').value = new Date().toISOString().split('T')[0];
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: err.message, confirmButtonColor: '#ff5b00' });
+            }
+        }
+
+        function initPackagePrices() {
+            const p1 = Math.round(basePrice * 1.0);
+            const p2 = Math.round(basePrice * 1.35);
+            const p3 = Math.round(basePrice * 1.7);
+
+            document.getElementById('pkgPrice1').innerText = p1.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('pkgPrice2').innerText = p2.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('pkgPrice3').innerText = p3.toLocaleString('vi-VN') + ' đ';
+
+            calculateTotal();
+        }
+
+        function choosePackage(multiplier, pkgName, element) {
+            currentMultiplier = multiplier;
+            currentPackageName = pkgName;
+
+            document.querySelectorAll('.package-item').forEach(el => {
+                el.classList.remove('selected');
+                const badge = el.querySelector('.pkg-badge');
+                if (badge) {
+                    badge.className = 'badge bg-secondary-subtle text-secondary pkg-badge';
+                    badge.innerText = 'Chọn gói này';
+                }
+            });
+
+            element.classList.add('selected');
+            const currentBadge = element.querySelector('.pkg-badge');
+            if (currentBadge) {
+                currentBadge.className = 'badge bg-danger-subtle text-danger pkg-badge';
+                currentBadge.innerText = 'Đang chọn';
+            }
+
+            document.getElementById('selectedPkgName').innerText = 'Gói: ' + pkgName;
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            const unitPrice = Math.round(basePrice * currentMultiplier);
+            const qty = Number(document.getElementById('custQty').value) || 1;
+            const total = unitPrice * qty;
+
+            document.getElementById('displayUnitPrice').innerText = unitPrice.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('displayTotal').innerText = total.toLocaleString('vi-VN') + ' đ';
+        }
+
+        async function submitBookingForm() {
+            const name = document.getElementById('custName').value.trim();
+            const email = document.getElementById('custEmail').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const date = document.getElementById('custDate').value;
+            const qty = Number(document.getElementById('custQty').value) || 1;
+            const unitPrice = Math.round(basePrice * currentMultiplier);
+            const total = unitPrice * qty;
+
+            if (!name || !email || !phone || !date) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Thiếu thông tin nhận vé',
+                    text: 'Vui lòng điền họ tên, email, số điện thoại và ngày sử dụng vé!',
+                    confirmButtonColor: '#ff5b00'
+                });
+                return;
+            }
+
+            const userStr = localStorage.getItem('user');
+            const userId = userStr ? JSON.parse(userStr).userId : null;
+
+            try {
+                const res = await fetch('/api/bookings/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId,
+                        activityId: Number(actId),
+                        customerName: name,
+                        customerEmail: email,
+                        customerPhone: phone,
+                        travelDate: date,
+                        quantity: qty,
+                        totalPrice: total
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    currentBookingId = data.bookingId;
+                    generatedTicketCode = data.ticketCode;
+
+                    document.getElementById('vietQrImg').src = data.vietQrUrl;
+                    document.getElementById('vietQrNote').innerText = 'Nội dung: ' + data.qrContent;
+                    document.getElementById('vietQrAmount').innerText = Number(data.totalPrice).toLocaleString('vi-VN') + ' đ';
+
+                    new bootstrap.Modal(document.getElementById('payModal')).show();
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Lỗi tạo đơn', text: data.message || 'Không thể tạo đơn vé!' });
+                }
+            } catch (e) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: e.message });
+            }
+        }
+
+        async function simulatePaymentSuccess() {
+            if (!currentBookingId) return;
+            const res = await fetch(`/api/bookings/confirm/${currentBookingId}`, { method: 'POST' });
+            if (res.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('payModal')).hide();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thanh Toán Thành Công!',
+                    html: `
+                        <div class="text-start p-2">
+                            <p class="mb-1">Cảm ơn bạn đã lựa chọn <strong>TTLooks</strong>!</p>
+                            <p class="mb-1">Mã vé điện tử (E-ticket) của bạn là:</p>
+                            <h4 class="text-danger fw-bold my-2 text-center">${generatedTicketCode}</h4>
+                            <p class="small text-muted mb-0">Quý khách vui lòng lưu lại mã vé trên để xuất trình khi trải nghiệm dịch vụ.</p>
+                        </div>
+                    `,
+                    confirmButtonColor: '#ff5b00',
+                    confirmButtonText: 'Về lại trang chủ'
+                }).then(() => {
+                    window.location.href = '/';
+                });
+            }
+        }
+
+        window.onload = loadDetail;
+    </script>
+</body>
+</html>
