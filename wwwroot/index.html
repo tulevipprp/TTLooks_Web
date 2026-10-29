@@ -167,11 +167,11 @@
 
             <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
                 <span class="small opacity-75"><i class="fa-solid fa-fire text-warning me-1"></i>Xu hướng:</span>
-                <span class="badge bg-white text-dark p-2 px-3 rounded-pill cursor-pointer" style="cursor:pointer;" onclick="quickSearch('Bà Nà')">Bà Nà Hills</span>
-                <span class="badge bg-white text-dark p-2 px-3 rounded-pill cursor-pointer" style="cursor:pointer;" onclick="quickSearch('Hội An')">Hội An</span>
-                <span class="badge bg-white text-dark p-2 px-3 rounded-pill cursor-pointer" style="cursor:pointer;" onclick="quickSearch('Singapore')">Singapore</span>
-                <span class="badge bg-white text-dark p-2 px-3 rounded-pill cursor-pointer" style="cursor:pointer;" onclick="quickSearch('Seoul')">Seoul Hàn Quốc</span>
-                <span class="badge bg-white text-dark p-2 px-3 rounded-pill cursor-pointer" style="cursor:pointer;" onclick="quickSearch('Disneyland')">Thượng Hải</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="quickSearch('Bà Nà')">Bà Nà Hills</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="quickSearch('Hội An')">Hội An</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="quickSearch('Singapore')">Singapore</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="quickSearch('Seoul')">Seoul Hàn Quốc</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="quickSearch('Phú Quốc')">Phú Quốc</span>
             </div>
         </div>
 
@@ -186,8 +186,8 @@
             <div class="col-4 col-md-2" onclick="quickSearch('Thuyền')">
                 <div class="category-item"><div class="category-icon"><i class="fa-solid fa-ship"></i></div><span class="small fw-bold">Tour thuyền</span></div>
             </div>
-            <div class="col-4 col-md-2" onclick="quickSearch('Disneyland')">
-                <div class="category-item"><div class="category-icon"><i class="fa-solid fa-castle"></i></div><span class="small fw-bold">Công viên</span></div>
+            <div class="col-4 col-md-2" onclick="quickSearch('Công viên')">
+                <div class="category-item"><div class="category-icon"><i class="fa-solid fa-landmark"></i></div><span class="small fw-bold">Công viên</span></div>
             </div>
             <div class="col-4 col-md-2" data-bs-toggle="modal" data-bs-target="#aiPlanModal">
                 <div class="category-item"><div class="category-icon" style="background:#eef2ff; color:#4f46e5;"><i class="fa-solid fa-robot"></i></div><span class="small fw-bold text-primary">Lịch Trình AI</span></div>
@@ -201,7 +201,7 @@
         </div>
     </div>
 
-    <!-- MODAL TRỢ LÝ AI LẬP LỊCH TRÌNH CÓ HÌNH ẢNH MINH HỌA -->
+    <!-- MODAL TRỢ LÝ AI LẬP LỊCH TRÌNH -->
     <div class="modal fade" id="aiPlanModal" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow">
@@ -322,7 +322,7 @@
         <i class="fa-solid fa-comments"></i>
     </div>
 
-    <!-- Cửa sổ Chatbot AI Nâng Cấp Thông Minh -->
+    <!-- Cửa sổ Chatbot AI -->
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
             <div class="d-flex align-items-center">
@@ -335,21 +335,18 @@
             <button type="button" class="btn-close btn-close-white" onclick="toggleChat()"></button>
         </div>
         
-        <!-- Khung chat -->
         <div class="chat-body" id="chatMsgs">
             <div class="chat-msg bot">
 Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Em có thể giúp bạn gợi ý quán ăn ngon, thời tiết điểm đến, kinh nghiệm đi lại hoặc giải đáp quy định vé quét mã QR vào cổng. Bạn đang quan tâm chuyến đi nào ạ?
             </div>
         </div>
 
-        <!-- Các nút gợi ý câu hỏi nhanh -->
         <div class="px-3 py-2 bg-white border-top d-flex gap-1 flex-wrap" id="quickQuestionsArea">
             <span class="quick-tag" onclick="askQuick('Bà Nà Hills nên đi giờ nào và mặc gì?')">👗 Đi Bà Nà mặc gì?</span>
             <span class="quick-tag" onclick="askQuick('Đặc sản ngon nhất ở Đà Nẵng là gì?')">🍲 Món ngon Đà Nẵng</span>
             <span class="quick-tag" onclick="askQuick('Quy định đổi trả và quét mã vé QR trên TTLooks?')">🎟️ Quy định vé QR</span>
         </div>
 
-        <!-- Khung gõ tin nhắn -->
         <div class="p-2 bg-white border-top d-flex gap-2">
             <input type="text" id="chatInput" class="form-control form-control-sm rounded-pill" placeholder="Hỏi AI bất kỳ điều gì..." onkeypress="if(event.key==='Enter') sendChat()">
             <button class="btn btn-warning btn-sm rounded-circle text-white px-2" onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
@@ -367,39 +364,49 @@ Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Em có thể giúp b�
             try {
                 const res = await fetch(`/api/activities?search=${encodeURIComponent(search)}`);
                 const data = await res.json();
-                if (!data || data.length === 0) {
+                
+                // Kiểm tra an toàn: Đảm bảo dữ liệu nhận được là mảng trước khi dùng .map
+                if (!Array.isArray(data) || data.length === 0) {
                     container.innerHTML = '<div class="col-12 text-center text-muted py-5">Không tìm thấy vé hoặc trải nghiệm phù hợp.</div>';
                     return;
                 }
+
                 container.innerHTML = data.map(item => `
-                    <div class="col-md-3 col-sm-6">
-                        <div class="card h-100 activity-card" onclick="goToDetail(${item.activityId})">
+                    <div class="col-md-4 col-sm-6">
+                        <div class="card h-100 activity-card" onclick="goToDetail(${item.activityId || item.ActivityId})">
                             <div class="card-img-wrapper">
-                                <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'}" alt="${item.title}">
+                                <img src="${item.imageUrl || item.ImageUrl || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'}" alt="${item.title || item.Title}">
                                 <span class="badge-instant"><i class="fa-solid fa-bolt me-1"></i>Xác nhận tức thì</span>
                             </div>
                             <div class="card-body d-flex flex-column p-3">
-                                <h6 class="fw-bold text-dark text-truncate mb-2">${item.title}</h6>
-                                <p class="card-text text-muted small flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.description || ''}</p>
+                                <h6 class="fw-bold text-dark text-truncate mb-2">${item.title || item.Title}</h6>
+                                <p class="card-text text-muted small flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.description || item.Description || ''}</p>
                                 <div class="d-flex align-items-center mb-2 small text-warning">
                                     <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
                                     <span class="text-dark fw-bold ms-1">4.9</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2">
-                                    <span class="text-danger fw-bold fs-5">${Number(item.price).toLocaleString('vi-VN')} đ</span>
-                                    <a href="activity-detail.html?id=${item.activityId}" class="btn btn-sm btn-orange rounded-pill px-3" onclick="event.stopPropagation();">Đặt vé</a>
+                                    <span class="text-danger fw-bold fs-5">${Number(item.price || item.Price).toLocaleString('vi-VN')} đ</span>
+                                    <a href="javascript:void(0)" class="btn btn-sm btn-orange rounded-pill px-3" onclick="event.stopPropagation(); goToDetail(${item.activityId || item.ActivityId})">Đặt vé</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 `).join('');
             } catch (err) {
-                container.innerHTML = `<div class="col-12 text-center text-danger py-4">Lỗi đọc API: ${err.message}</div>`;
+                container.innerHTML = `<div class="col-12 text-center text-danger py-4">Lỗi nạp dữ liệu: ${err.message}</div>`;
             }
         }
 
         function goToDetail(id) {
-            window.location.href = `activity-detail.html?id=${id}`;
+            Swal.fire({
+                title: 'Đặt Vé Nhanh',
+                text: 'Hệ thống đã nhận diện mã vé #' + id + '. Bạn có muốn tiến hành đặt ngay không?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#ff5b00',
+                confirmButtonText: 'Đặt Ngay'
+            });
         }
 
         function quickSearch(k) {
@@ -414,7 +421,7 @@ Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Em có thể giúp b�
             const pref = document.getElementById('aiPref').value.trim() || 'Khám phá tổng hợp';
 
             if (!dest) {
-                Swal.fire({ icon: 'warning', title: 'Thiếu điểm đến', text: 'Vui lòng nhập điểm đến du lịch bạn muốn đi!', confirmButtonColor: '#ff5b00' });
+                Swal.fire({ icon: 'warning', title: 'Thiếu điểm đến', text: 'Vui lòng nhập điểm đến bạn muốn đi!', confirmButtonColor: '#ff5b00' });
                 return;
             }
 
@@ -455,17 +462,17 @@ Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Em có thể giúp b�
                             <div class="row g-3">
                                 <div class="col-md-6 col-lg-3">
                                     <div class="card h-100 plan-place-card">
-                                        <img src="${morningAct.imageUrl || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'}" class="plan-place-img" alt="${morningAct.title || ''}">
+                                        <img src="${morningAct.imageUrl || morningAct.ImageUrl || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'}" class="plan-place-img" alt="${morningAct.title || ''}">
                                         <div class="card-body p-3 d-flex flex-column">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="badge badge-morning time-tag">Sáng (08:00 - 11:30)</span>
                                                 <span class="badge bg-light text-secondary border">Check-in</span>
                                             </div>
-                                            <h6 class="fw-bold mb-1 text-truncate">${morningAct.title || 'Điểm tham quan buổi sáng'}</h6>
-                                            <p class="text-muted small flex-grow-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${morningAct.description || 'Khám phá danh lam thắng cảnh và chụp ảnh check-in.'}</p>
+                                            <h6 class="fw-bold mb-1 text-truncate">${morningAct.title || morningAct.Title || 'Điểm tham quan buổi sáng'}</h6>
+                                            <p class="text-muted small flex-grow-1">${morningAct.description || morningAct.Description || 'Khám phá danh thắng và chụp ảnh check-in.'}</p>
                                             <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                                                <span class="text-danger fw-bold small">${Number(morningAct.price || 0).toLocaleString('vi-VN')} đ</span>
-                                                <a href="activity-detail.html?id=${morningAct.activityId}" class="btn btn-sm btn-outline-warning text-dark fw-bold rounded-pill px-2">Đặt vé</a>
+                                                <span class="text-danger fw-bold small">${Number(morningAct.price || morningAct.Price || 0).toLocaleString('vi-VN')} đ</span>
+                                                <button class="btn btn-sm btn-outline-warning text-dark fw-bold rounded-pill px-2" onclick="goToDetail(${morningAct.activityId || 1})">Đặt vé</button>
                                             </div>
                                         </div>
                                     </div>
@@ -490,17 +497,17 @@ Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Em có thể giúp b�
 
                                 <div class="col-md-6 col-lg-3">
                                     <div class="card h-100 plan-place-card">
-                                        <img src="${afternoonAct.imageUrl || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'}" class="plan-place-img" alt="${afternoonAct.title || ''}">
+                                        <img src="${afternoonAct.imageUrl || afternoonAct.ImageUrl || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'}" class="plan-place-img" alt="${afternoonAct.title || ''}">
                                         <div class="card-body p-3 d-flex flex-column">
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="badge badge-afternoon time-tag">Chiều (14:00 - 17:30)</span>
                                                 <span class="badge bg-light text-secondary border">Khám phá</span>
                                             </div>
-                                            <h6 class="fw-bold mb-1 text-truncate">${afternoonAct.title || 'Điểm tham quan buổi chiều'}</h6>
-                                            <p class="text-muted small flex-grow-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${afternoonAct.description || 'Tham gia trải nghiệm vui chơi, khám phá văn hóa và chụp ảnh lưu niệm.'}</p>
+                                            <h6 class="fw-bold mb-1 text-truncate">${afternoonAct.title || afternoonAct.Title || 'Điểm tham quan buổi chiều'}</h6>
+                                            <p class="text-muted small flex-grow-1">${afternoonAct.description || afternoonAct.Description || 'Vui chơi trải nghiệm và lưu giữ kỷ niệm.'}</p>
                                             <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                                                <span class="text-danger fw-bold small">${Number(afternoonAct.price || 0).toLocaleString('vi-VN')} đ</span>
-                                                <a href="activity-detail.html?id=${afternoonAct.activityId}" class="btn btn-sm btn-outline-warning text-dark fw-bold rounded-pill px-2">Đặt vé</a>
+                                                <span class="text-danger fw-bold small">${Number(afternoonAct.price || afternoonAct.Price || 0).toLocaleString('vi-VN')} đ</span>
+                                                <button class="btn btn-sm btn-outline-warning text-dark fw-bold rounded-pill px-2" onclick="goToDetail(${afternoonAct.activityId || 2})">Đặt vé</button>
                                             </div>
                                         </div>
                                     </div>
@@ -616,8 +623,7 @@ Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Em có thể giúp b�
                                 <li><a class="dropdown-item py-2 text-danger fw-bold" href="admin.html"><i class="fa-solid fa-gauge-high me-2"></i>Trang Quản Trị (Admin)</a></li>
                                 <li><hr class="dropdown-divider"></li>
                             ` : ''}
-                            <li><a class="dropdown-item py-2" href="profile.html"><i class="fa-solid fa-id-badge text-warning me-2"></i>Hồ sơ cá nhân</a></li>
-                            <li><a class="dropdown-item py-2" href="my-bookings.html"><i class="fa-solid fa-ticket text-primary me-2"></i>Vé đã đặt & E-Ticket</a></li>
+                            <li><a class="dropdown-item py-2" href="javascript:void(0)" onclick="Swal.fire('Hồ sơ', 'Họ tên: ' + '${user.fullName}', 'info')"><i class="fa-solid fa-id-badge text-warning me-2"></i>Hồ sơ cá nhân</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item py-2 text-danger" href="javascript:void(0)" onclick="logout()"><i class="fa-solid fa-power-off me-2"></i>Đăng xuất</a></li>
                         </ul>
