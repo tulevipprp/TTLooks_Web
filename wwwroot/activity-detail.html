@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Trải Nghiệm - TTLooks</title>
+    <title>Chi Tiết Trải Nghiệm & Đặt Vé - TTLooks</title>
     <!-- Bootstrap 5, FontAwesome & SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -14,227 +14,219 @@
             --brand-orange-hover: #e04f00;
         }
 
-        .navbar-brand { font-weight: 800; color: var(--brand-orange) !important; font-size: 1.5rem; }
-        .btn-orange { background-color: var(--brand-orange); color: #fff; border: none; font-weight: 700; }
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: #334155;
+            background-color: #f8fafc;
+        }
+
+        .navbar-brand { font-weight: 800; color: var(--brand-orange) !important; font-size: 1.55rem; }
+        .btn-orange { background-color: var(--brand-orange); color: #fff; border: none; font-weight: 600; }
         .btn-orange:hover { background-color: var(--brand-orange-hover); color: #fff; }
 
-        /* Bố cục thư viện ảnh Mosaic Klook */
-        .photo-mosaic-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            grid-gap: 10px;
-            border-radius: 16px;
-            overflow: hidden;
+        .detail-hero-img {
+            width: 100%;
             height: 380px;
-            margin-bottom: 25px;
-        }
-        .mosaic-main { width: 100%; height: 100%; object-fit: cover; }
-        .mosaic-side-grid { display: grid; grid-template-rows: 1fr 1fr; grid-gap: 10px; height: 100%; }
-        .mosaic-side-grid img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* Hộp đặt vé cố định Sticky Box */
-        .sticky-booking-card {
-            position: -webkit-sticky;
-            position: sticky;
-            top: 85px;
-            z-index: 99;
-            background: #ffffff;
-            border: 1px solid #ebebeb;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
-        /* Thẻ gói dịch vụ */
-        .package-item {
-            border: 2px solid #e9ecef;
-            border-radius: 14px;
-            padding: 18px;
-            margin-bottom: 14px;
+        .booking-card {
             background: #fff;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-        .package-item:hover { border-color: #ffb792; }
-        .package-item.selected {
-            border-color: var(--brand-orange);
-            background-color: #fffaf7;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            border: 1px solid #edf2f7;
+            position: sticky;
+            top: 90px;
         }
 
-        .guide-section h5::before {
-            content: "";
-            display: inline-block;
-            width: 5px;
-            height: 18px;
-            background-color: var(--brand-orange);
-            margin-right: 10px;
-            border-radius: 3px;
-            vertical-align: middle;
+        .feature-box {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .quantity-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .quantity-btn:hover {
+            background: #f1f5f9;
+            border-color: var(--brand-orange);
+            color: var(--brand-orange);
+        }
+
+        .vietqr-box {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand" href="/"><i class="fa-solid fa-compass me-2"></i>TTLooks</a>
-            <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i>Về Trang Chủ</a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <a href="my-bookings.html" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-semibold">
+                    <i class="fa-solid fa-ticket me-1 text-warning"></i> Vé Của Tôi
+                </a>
+                <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Trang Chủ
+                </a>
+            </div>
         </div>
     </nav>
 
+    <!-- Main Content -->
     <div class="container py-4">
-
-        <!-- Thư viện ảnh Mosaic -->
-        <div class="photo-mosaic-grid">
-            <div>
-                <img id="detailImgMain" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" class="mosaic-main" alt="Trải nghiệm">
-            </div>
-            <div class="mosaic-side-grid">
-                <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80" alt="Sub 1">
-                <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80" alt="Sub 2">
-            </div>
-        </div>
+        
+        <!-- Nút quay lại & Tiêu đề -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Trang chủ</a></li>
+                <li class="breadcrumb-item active text-dark fw-semibold" id="breadTitle">Chi tiết trải nghiệm</li>
+            </ol>
+        </nav>
 
         <div class="row g-4">
-            <!-- Cột trái: Thông tin chi tiết, Các gói lựa chọn & Hướng dẫn -->
+            
+            <!-- Cột trái: Thông tin chi tiết trải nghiệm -->
             <div class="col-lg-7">
+                <img id="actImg" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Ảnh hoạt động" class="detail-hero-img mb-4">
+                
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <span class="badge bg-warning text-dark fw-bold px-2 py-1"><i class="fa-solid fa-crown me-1"></i>Trải Nghiệm Nổi Bật</span>
-                    <span class="badge bg-success-subtle text-success border border-success-subtle"><i class="fa-solid fa-bolt me-1"></i>Xác nhận tức thì</span>
-                </div>
-                <h2 class="fw-bold text-dark mb-2" id="detailTitle">Đang tải tên trải nghiệm...</h2>
-                <div class="d-flex align-items-center gap-3 mb-4 small text-muted">
-                    <span class="text-warning fw-bold"><i class="fa-solid fa-star"></i> 4.9/5</span>
-                    <span>(2.4k+ đánh giá)</span>
-                    <span>&bull; Đã đặt hơn 15.000+ lượt</span>
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill"><i class="fa-solid fa-bolt me-1"></i>Xác nhận tức thì</span>
+                    <span class="badge bg-light text-secondary border px-3 py-2 rounded-pill"><i class="fa-solid fa-shield-halved text-success me-1"></i>Bảo hiểm du lịch</span>
+                    <span class="badge bg-light text-warning border px-3 py-2 rounded-pill"><i class="fa-solid fa-star me-1"></i>4.9/5 Đánh giá cao</span>
                 </div>
 
-                <!-- CÁC GÓI LỰA CHỌN GIÁ -->
-                <div class="guide-section mb-4">
-                    <h5 class="fw-bold mb-3">Các Gói Dịch Vụ & Lựa Chọn Giá (Packages)</h5>
+                <h2 class="fw-bold text-dark mb-3" id="actTitle">Đang nạp thông tin...</h2>
+                <div class="text-secondary mb-4" id="actDesc" style="line-height: 1.8; white-space: pre-line;"></div>
 
-                    <!-- Gói 1: Vé tiêu chuẩn -->
-                    <div class="package-item selected" id="pkg-1" onclick="choosePackage(1.0, 'Vé Tiêu Chuẩn', this)">
-                        <div class="d-flex justify-content-between align-items-start mb-1">
-                            <h6 class="fw-bold mb-1">[Vé Tiêu Chuẩn] Vào Cổng Trực Tiếp & Toàn Bộ Trò Chơi Ngoài Trời</h6>
-                        </div>
-                        <p class="text-muted small mb-2">Bao gồm vé vào cổng tham quan, áp dụng đúng ngày đã chọn.</p>
-                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                            <span class="text-danger fw-bold fs-5" id="pkgPrice1">0 đ</span>
-                            <span class="badge bg-danger-subtle text-danger pkg-badge">Đang chọn</span>
-                        </div>
-                    </div>
-
-                    <!-- Gói 2: Vé kèm Buffet trưa -->
-                    <div class="package-item" id="pkg-2" onclick="choosePackage(1.35, 'Trọn Gói Kèm Buffet Trưa', this)">
-                        <div class="d-flex justify-content-between align-items-start mb-1">
-                            <h6 class="fw-bold mb-1">[Trọn Gói 1 Ngày] Vé Vào Cổng + Tiệc Buffet Trưa Quốc Tế</h6>
-                        </div>
-                        <p class="text-muted small mb-2">Thưởng thức tiệc buffet hơn 70 món đặc sản địa phương và quốc tế.</p>
-                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                            <span class="text-danger fw-bold fs-5" id="pkgPrice2">0 đ</span>
-                            <span class="badge bg-secondary-subtle text-secondary pkg-badge">Chọn gói này</span>
-                        </div>
-                    </div>
-
-                    <!-- Gói 3: Vé VIP FastPass -->
-                    <div class="package-item" id="pkg-3" onclick="choosePackage(1.7, 'Vé VIP FastPass Ưu Tiên', this)">
-                        <div class="d-flex justify-content-between align-items-start mb-1">
-                            <h6 class="fw-bold mb-1">[Vé VIP FastPass] Lối Đi Ưu Tiên Không Chờ Đợi</h6>
-                        </div>
-                        <p class="text-muted small mb-2">Đặc quyền ưu tiên không cần xếp hàng tại tất cả các điểm check-in & cáp treo.</p>
-                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
-                            <span class="text-danger fw-bold fs-5" id="pkgPrice3">0 đ</span>
-                            <span class="badge bg-secondary-subtle text-secondary pkg-badge">Chọn gói này</span>
-                        </div>
+                <!-- Điểm nổi bật -->
+                <div class="feature-box p-4 mb-4">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-wand-magic-sparkles text-warning me-2"></i>Quyền Lợi & Tiện Ích Bao Gồm:</h5>
+                    <div class="row g-3 small">
+                        <div class="col-sm-6"><i class="fa-solid fa-circle-check text-success me-2"></i>Vé vào cửa chính không cần xếp hàng mua vé giấy.</div>
+                        <div class="col-sm-6"><i class="fa-solid fa-circle-check text-success me-2"></i>Nhận mã vé điện tử QR Code ngay sau khi thanh toán.</div>
+                        <div class="col-sm-6"><i class="fa-solid fa-circle-check text-success me-2"></i>Tích hợp hỗ trợ tư vấn từ Trợ Lý Du Lịch AI TTLooks 24/7.</div>
+                        <div class="col-sm-6"><i class="fa-solid fa-circle-check text-success me-2"></i>Hoàn huỷ linh hoạt trước ngày khởi hành 24 giờ.</div>
                     </div>
                 </div>
 
-                <!-- Mô tả trải nghiệm -->
-                <div class="guide-section mb-4">
-                    <h5 class="fw-bold mb-3">Mô Tả & Hướng Dẫn Trải Nghiệm</h5>
-                    <div class="p-3 bg-white border rounded-3 text-secondary small" style="line-height: 1.8;">
-                        <p id="detailDesc" class="mb-0" style="white-space: pre-line;">Đang nạp mô tả...</p>
-                    </div>
+                <!-- Quy định & Lưu ý -->
+                <div class="feature-box p-4 mb-4">
+                    <h5 class="fw-bold mb-2"><i class="fa-solid fa-circle-info text-primary me-2"></i>Hướng Dẫn Sử Dụng E-Ticket:</h5>
+                    <p class="text-muted small mb-0">Sau khi thanh toán thành công, hệ thống sẽ cấp ngay cho bạn một <strong>Mã vé điện tử (E-Ticket)</strong> kèm mã QR. Khi đến điểm tham quan, bạn chỉ cần xuất trình mã QR trên điện thoại tại cổng quét để vào trực tiếp.</p>
                 </div>
             </div>
 
-            <!-- Cột phải: Web Form Đặt vé cố định (Sticky Box) -->
+            <!-- Cột phải: Khung Đặt vé & Thanh toán VietQR -->
             <div class="col-lg-5">
-                <div class="sticky-booking-card">
+                <div class="booking-card p-4">
+                    <h4 class="fw-bold mb-3 text-dark">Đặt Chỗ & Mua Vé</h4>
+
                     <div class="mb-3">
-                        <small class="text-muted d-block">Đơn giá gói đang chọn</small>
-                        <div class="text-danger fw-bold fs-3" id="displayUnitPrice">0 đ</div>
-                        <small class="text-success fw-bold" id="selectedPkgName">Gói: Vé Tiêu Chuẩn</small>
+                        <label class="form-label small fw-bold text-secondary">Đơn giá vé:</label>
+                        <div class="text-danger fw-bold fs-4" id="actPrice">0 đ</div>
+                    </div>
+
+                    <!-- Ngày đi -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Ngày sử dụng vé / Ngày đi:</label>
+                        <input type="date" id="txtDate" class="form-control form-control-lg rounded-3 fs-6">
+                    </div>
+
+                    <!-- Số lượng vé -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Số lượng khách / vé:</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <button type="button" class="quantity-btn" onclick="changeQty(-1)"><i class="fa-solid fa-minus"></i></button>
+                            <span class="fs-5 fw-bold" id="lblQty">1</span>
+                            <button type="button" class="quantity-btn" onclick="changeQty(1)"><i class="fa-solid fa-plus"></i></button>
+                            <span class="small text-muted ms-auto" id="lblSubtotal">Tạm tính: 0 đ</span>
+                        </div>
                     </div>
 
                     <hr class="my-3">
 
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold">Họ và tên người nhận vé</label>
-                        <input type="text" id="custName" class="form-control" placeholder="Nguyễn Văn A">
+                    <!-- Thông tin liên hệ -->
+                    <h6 class="fw-bold mb-2 text-dark">Thông Tin Nhận Vé Điện Tử</h6>
+                    <div class="mb-2">
+                        <label class="form-label small fw-bold text-secondary mb-1">Họ và tên người nhận</label>
+                        <input type="text" id="custName" class="form-control rounded-3" placeholder="Nguyễn Văn A">
                     </div>
-
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <label class="form-label small fw-bold">Email nhận mã vé</label>
-                            <input type="email" id="custEmail" class="form-control" placeholder="email@gmail.com">
+                    <div class="row g-2 mb-2">
+                        <div class="col-sm-6">
+                            <label class="form-label small fw-bold text-secondary mb-1">Email</label>
+                            <input type="email" id="custEmail" class="form-control rounded-3" placeholder="email@gmail.com">
                         </div>
-                        <div class="col-6">
-                            <label class="form-label small fw-bold">Số điện thoại</label>
-                            <input type="text" id="custPhone" class="form-control" placeholder="0901234567">
-                        </div>
-                    </div>
-
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <label class="form-label small fw-bold">Ngày sử dụng vé</label>
-                            <input type="date" id="custDate" class="form-control">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label small fw-bold">Số lượng vé</label>
-                            <input type="number" id="custQty" class="form-control" value="1" min="1" max="20" onchange="calculateTotal()" onkeyup="calculateTotal()">
+                        <div class="col-sm-6">
+                            <label class="form-label small fw-bold text-secondary mb-1">Số điện thoại</label>
+                            <input type="text" id="custPhone" class="form-control rounded-3" placeholder="0901234567">
                         </div>
                     </div>
 
-                    <!-- Bảng tính tổng tiền -->
-                    <div class="alert alert-light border d-flex justify-content-between align-items-center mb-3">
-                        <span class="fw-bold">Tổng thanh toán:</span>
-                        <span class="fs-4 fw-bold text-danger" id="displayTotal">0 đ</span>
+                    <!-- Tổng thanh toán -->
+                    <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded-3 my-3 border">
+                        <span class="fw-bold text-secondary">Tổng thanh toán:</span>
+                        <span class="text-danger fw-bold fs-4" id="lblTotalPrice">0 đ</span>
                     </div>
 
-                    <button class="btn btn-orange w-100 py-3 rounded-pill" onclick="submitBookingForm()">
+                    <button class="btn btn-orange w-100 py-3 rounded-pill fw-bold fs-6 shadow-sm" onclick="submitBooking()">
                         <i class="fa-solid fa-qrcode me-2"></i>Tiến Hành Thanh Toán VietQR
                     </button>
-                    <small class="text-muted text-center d-block mt-2" style="font-size: 0.75rem;">
-                        <i class="fa-solid fa-shield-halved text-success me-1"></i>Thanh toán chuyển khoản an toàn &bull; Xuất mã QR vé tức thì
-                    </small>
                 </div>
             </div>
+
         </div>
     </div>
 
-    <!-- Modal Thanh toán VietQR -->
-    <div class="modal fade" id="payModal" tabindex="-1">
+    <!-- MODAL THANH TOÁN VIETQR & XÁC NHẬN E-TICKET -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow text-center p-3">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold text-success w-100"><i class="fa-solid fa-shield-halved me-1"></i>Thanh Toán Chuyển Khoản VietQR</h5>
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-qrcode me-2"></i>Thanh Toán Chuyển Khoản VietQR</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <p class="text-muted small mb-2">Mở App ngân hàng bất kỳ để quét mã nhận vé tự động:</p>
-                    <div class="p-2 bg-white d-inline-block rounded-3 border mb-3">
-                        <img id="vietQrImg" src="" alt="Mã VietQR" class="img-fluid" style="max-height: 250px;">
+                <div class="modal-body p-4 text-center">
+                    <p class="text-muted small mb-3">Mở app Ngân hàng (MB, Vietcombank, Momo, Techcombank...) và <strong>Quét mã QR</strong> bên dưới:</p>
+                    
+                    <div class="vietqr-box p-3 d-inline-block mb-3">
+                        <img id="qrImage" src="" alt="Mã VietQR" style="width: 260px; height: 260px; object-fit: contain;">
                     </div>
-                    <div class="alert alert-warning py-2 mb-3">
-                        <small class="d-block fw-bold" id="vietQrNote">Nội dung: TTLOOKS ...</small>
-                        <small class="text-danger fw-bold fs-5" id="vietQrAmount">0 đ</small>
+
+                    <div class="alert alert-warning border-0 p-3 small text-start mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Chủ tài khoản:</span>
+                            <strong class="text-dark">LE QUOC TU</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-muted">Số tiền cần chuyển:</span>
+                            <strong class="text-danger fs-6" id="qrAmountText">0 đ</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Mã đơn hàng / Nội dung:</span>
+                            <strong class="text-primary fw-bold" id="qrContentText">TTLOOKS BOOKING</strong>
+                        </div>
                     </div>
-                    <!-- Nút giả lập -->
-                    <button class="btn btn-success w-100 py-2 rounded-pill fw-bold" onclick="simulatePaymentSuccess()">
-                        <i class="fa-solid fa-circle-check me-1"></i> [MÔ PHỎNG] Tôi Đã Chuyển Khoản Thành Công
+
+                    <button class="btn btn-success w-100 py-2 rounded-pill fw-bold" id="btnConfirmPay" onclick="confirmPayment()">
+                        <i class="fa-solid fa-circle-check me-2"></i>Tôi Đã Chuyển Khoản Thành Công
                     </button>
                 </div>
             </div>
@@ -244,110 +236,108 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const actId = urlParams.get('id');
-
-        let basePrice = 0;
-        let currentMultiplier = 1.0;
-        let currentPackageName = 'Vé Tiêu Chuẩn';
+        let currentActivity = null;
+        let unitPrice = 0;
+        let quantity = 1;
         let currentBookingId = 0;
-        let generatedTicketCode = '';
+
+        // Dữ liệu dự phòng chuẩn nếu đang chạy demo không có CSDL
+        const defaultItems = [
+            { id: 1, title: 'Sun World Bà Nà Hills (Đà Nẵng)', desc: 'Chiêm ngưỡng Cầu Vàng sương mây nổi tiếng toàn cầu, trải nghiệm tuyến cáp treo đạt nhiều kỷ lục thế giới và khám phá Làng Pháp cổ kính cùng hàng chục trò chơi giải trí tại Fantasy Park.', price: 900000, img: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&w=1200&q=80' },
+            { id: 2, title: 'Công Viên Universal Studios Singapore', desc: 'Thiên đường giải trí đỉnh cao Sentosa với các khu chủ đề Hollywood, New York, Sci-Fi City, Ancient Egypt và các trò chơi cảm giác mạnh hàng đầu thế giới.', price: 1480000, img: 'https://images.unsplash.com/photo-1565967511849-76a60a516170?auto=format&fit=crop&w=1200&q=80' },
+            { id: 3, title: 'Đài Quan Sát Tháp N Seoul Tower', desc: 'Ngắm nhìn toàn cảnh thủ đô Seoul lấp lánh về đêm, lưu lại khoảnh khắc lãng mạn tại hàng rào ổ khóa tình yêu và trải nghiệm văn hóa truyền thống Hàn Quốc.', price: 210000, img: 'https://images.unsplash.com/photo-1546874177-9e664107314e?auto=format&fit=crop&w=1200&q=80' },
+            { id: 4, title: 'Furama Resort 5 Sao Đà Nẵng', desc: 'Khu nghỉ dưỡng di sản 5 sao sang trọng bên bờ biển Mỹ Khê với hồ bơi vô cực ngập tràn cây xanh nhiệt đới, phòng nghỉ đẳng cấp kèm buffet sáng quốc tế.', price: 2850000, img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80' },
+            { id: 5, title: 'Vinpearl Resort & Spa Phú Quốc', desc: 'Biệt thự hướng biển đẳng cấp tại Bãi Dài, tận hưởng bãi biển riêng tư, hồ bơi rộng lớn và dịch vụ chăm sóc sức khỏe chuẩn 5 sao.', price: 3200000, img: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80' },
+            { id: 6, title: 'Marina Bay Sands Singapore (1 Đêm)', desc: 'Biểu tượng nghỉ dưỡng xa hoa bậc nhất thế giới với hồ bơi vô cực tầng thượng ngắm trọn vịnh Marina và các dịch vụ sang trọng đỉnh cao.', price: 7500000, img: 'https://images.unsplash.com/photo-1506354666786-959d6d497f1a?auto=format&fit=crop&w=1200&q=80' },
+            { id: 7, title: 'Buffet Bốn Mùa Beer Plaza (Bà Nà)', desc: 'Đại tiệc ẩm thực hơn 100 món ăn Á - Âu và đặc sản truyền thống ba miền trong không gian lễ hội âm nhạc sống động trên đỉnh Bà Nà.', price: 350000, img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80' },
+            { id: 8, title: 'Buffet Cua Sốt Ớt Chilli Crab Vịnh Marina', desc: 'Thưởng thức ẩm thực trứ danh quốc đảo sư tử Singapore với món cua sốt ớt đậm đà ăn kèm bánh bao chiên vàng giòn và hải sản hảo hạng.', price: 850000, img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=1200&q=80' },
+            { id: 9, title: 'Buffet Nướng Samgyeopsal Myeongdong Seoul', desc: 'Trải nghiệm ẩm thực thịt nướng thượng hạng kèm bò Wagyu và hàng chục món panchan truyền thống tại khu phố ẩm thực sầm uất Myeongdong.', price: 420000, img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80' }
+        ];
 
         async function loadDetail() {
-            if (!actId) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Lỗi đường dẫn',
-                    text: 'Không tìm thấy mã trải nghiệm du lịch!',
-                    confirmButtonColor: '#ff5b00'
-                }).then(() => window.location.href = '/');
-                return;
-            }
+            // Lấy ID từ URL (vd: activity-detail.html?id=2)
+            const params = new URLSearchParams(window.location.search);
+            const id = parseInt(params.get('id')) || 1;
+
+            // Đặt ngày đi mặc định là ngày mai
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('txtDate').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('txtDate').min = new Date().toISOString().split('T')[0];
+
+            // Tự động điền nếu đã đăng nhập
+            // Tự động điền thông tin nếu đã đăng nhập
+// Tự động điền thông tin nếu đã đăng nhập
+const userStr = localStorage.getItem('user');
+if (userStr) {
+    try {
+        const user = JSON.parse(userStr);
+        document.getElementById('custName').value = user.fullName || user.FullName || '';
+        document.getElementById('custEmail').value = user.email || user.Email || '';
+        
+        // Đọc số điện thoại từ mọi thuộc tính có thể có, hoặc lấy từ cache đăng ký
+        const phone = user.phoneNumber || user.phone || user.PhoneNumber || user.Phone || 
+                      localStorage.getItem('registeredPhone_' + (user.email || '').toLowerCase()) || '';
+        document.getElementById('custPhone').value = phone;
+    } catch (e) {
+        console.error("Lỗi đọc user:", e);
+    }
+}
 
             try {
-                const res = await fetch(`/api/activities/${actId}`);
-                if (!res.ok) throw new Error('Không tìm thấy vé');
-                const data = await res.json();
-
-                document.getElementById('detailTitle').innerText = data.title;
-                document.getElementById('detailDesc').innerText = data.description || 'Chưa có mô tả chi tiết.';
-                if (data.imageUrl) document.getElementById('detailImgMain').src = data.imageUrl;
-
-                basePrice = Number(data.price);
-                initPackagePrices();
-
-                // Điền thông tin người dùng nếu đã đăng nhập
-                const userStr = localStorage.getItem('user');
-                if (userStr) {
-                    const user = JSON.parse(userStr);
-                    document.getElementById('custName').value = user.fullName;
-                    document.getElementById('custEmail').value = user.email;
+                const res = await fetch(`/api/activities/${id}`);
+                if (res.ok) {
+                    currentActivity = await res.json();
+                } else {
+                    currentActivity = defaultItems.find(x => x.id === id) || defaultItems[0];
                 }
-                document.getElementById('custDate').value = new Date().toISOString().split('T')[0];
-            } catch (err) {
-                Swal.fire({ icon: 'error', title: 'Lỗi', text: err.message, confirmButtonColor: '#ff5b00' });
-            }
-        }
-
-        function initPackagePrices() {
-            const p1 = Math.round(basePrice * 1.0);
-            const p2 = Math.round(basePrice * 1.35);
-            const p3 = Math.round(basePrice * 1.7);
-
-            document.getElementById('pkgPrice1').innerText = p1.toLocaleString('vi-VN') + ' đ';
-            document.getElementById('pkgPrice2').innerText = p2.toLocaleString('vi-VN') + ' đ';
-            document.getElementById('pkgPrice3').innerText = p3.toLocaleString('vi-VN') + ' đ';
-
-            calculateTotal();
-        }
-
-        function choosePackage(multiplier, pkgName, element) {
-            currentMultiplier = multiplier;
-            currentPackageName = pkgName;
-
-            document.querySelectorAll('.package-item').forEach(el => {
-                el.classList.remove('selected');
-                const badge = el.querySelector('.pkg-badge');
-                if (badge) {
-                    badge.className = 'badge bg-secondary-subtle text-secondary pkg-badge';
-                    badge.innerText = 'Chọn gói này';
-                }
-            });
-
-            element.classList.add('selected');
-            const currentBadge = element.querySelector('.pkg-badge');
-            if (currentBadge) {
-                currentBadge.className = 'badge bg-danger-subtle text-danger pkg-badge';
-                currentBadge.innerText = 'Đang chọn';
+            } catch {
+                currentActivity = defaultItems.find(x => x.id === id) || defaultItems[0];
             }
 
-            document.getElementById('selectedPkgName').innerText = 'Gói: ' + pkgName;
-            calculateTotal();
+            displayActivityInfo();
         }
 
-        function calculateTotal() {
-            const unitPrice = Math.round(basePrice * currentMultiplier);
-            const qty = Number(document.getElementById('custQty').value) || 1;
-            const total = unitPrice * qty;
+        function displayActivityInfo() {
+            const title = currentActivity.title || currentActivity.Title;
+            const desc = currentActivity.description || currentActivity.Description;
+            const img = currentActivity.imageUrl || currentActivity.img;
+            unitPrice = Number(currentActivity.price || currentActivity.Price);
 
-            document.getElementById('displayUnitPrice').innerText = unitPrice.toLocaleString('vi-VN') + ' đ';
-            document.getElementById('displayTotal').innerText = total.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('breadTitle').innerText = title;
+            document.getElementById('actTitle').innerText = title;
+            document.getElementById('actDesc').innerText = desc;
+            document.getElementById('actImg').src = img;
+            document.getElementById('actPrice').innerText = unitPrice.toLocaleString('vi-VN') + ' đ / vé';
+
+            updateTotal();
         }
 
-        async function submitBookingForm() {
+        function changeQty(delta) {
+            quantity += delta;
+            if (quantity < 1) quantity = 1;
+            if (quantity > 20) quantity = 20;
+            document.getElementById('lblQty').innerText = quantity;
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const total = unitPrice * quantity;
+            document.getElementById('lblSubtotal').innerText = 'Tạm tính: ' + total.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('lblTotalPrice').innerText = total.toLocaleString('vi-VN') + ' đ';
+        }
+
+        async function submitBooking() {
             const name = document.getElementById('custName').value.trim();
             const email = document.getElementById('custEmail').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
-            const date = document.getElementById('custDate').value;
-            const qty = Number(document.getElementById('custQty').value) || 1;
-            const unitPrice = Math.round(basePrice * currentMultiplier);
-            const total = unitPrice * qty;
+            const travelDate = document.getElementById('txtDate').value;
 
-            if (!name || !email || !phone || !date) {
+            if (!name || !email || !phone || !travelDate) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Thiếu thông tin nhận vé',
-                    text: 'Vui lòng điền họ tên, email, số điện thoại và ngày sử dụng vé!',
+                    title: 'Thiếu thông tin',
+                    text: 'Vui lòng nhập đầy đủ thông tin người nhận vé và ngày sử dụng!',
                     confirmButtonColor: '#ff5b00'
                 });
                 return;
@@ -355,62 +345,70 @@
 
             const userStr = localStorage.getItem('user');
             const userId = userStr ? JSON.parse(userStr).userId : null;
+            const totalPrice = unitPrice * quantity;
+
+            const payload = {
+                userId: userId,
+                activityId: currentActivity.activityId || currentActivity.id || 1,
+                customerName: name,
+                customerEmail: email,
+                customerPhone: phone,
+                travelDate: travelDate,
+                quantity: quantity,
+                totalPrice: totalPrice
+            };
+
+            Swal.fire({
+                title: 'Đang khởi tạo đơn hàng...',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
 
             try {
                 const res = await fetch('/api/bookings/create', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId,
-                        activityId: Number(actId),
-                        customerName: name,
-                        customerEmail: email,
-                        customerPhone: phone,
-                        travelDate: date,
-                        quantity: qty,
-                        totalPrice: total
-                    })
+                    body: JSON.stringify(payload)
                 });
-
                 const data = await res.json();
-                if (res.ok) {
-                    currentBookingId = data.bookingId;
-                    generatedTicketCode = data.ticketCode;
+                Swal.close();
 
-                    document.getElementById('vietQrImg').src = data.vietQrUrl;
-                    document.getElementById('vietQrNote').innerText = 'Nội dung: ' + data.qrContent;
-                    document.getElementById('vietQrAmount').innerText = Number(data.totalPrice).toLocaleString('vi-VN') + ' đ';
+                currentBookingId = data.bookingId;
+                document.getElementById('qrImage').src = data.vietQrUrl;
+                document.getElementById('qrAmountText').innerText = Number(data.totalPrice).toLocaleString('vi-VN') + ' đ';
+                document.getElementById('qrContentText').innerText = data.qrContent;
 
-                    new bootstrap.Modal(document.getElementById('payModal')).show();
-                } else {
-                    Swal.fire({ icon: 'error', title: 'Lỗi tạo đơn', text: data.message || 'Không thể tạo đơn vé!' });
-                }
-            } catch (e) {
-                Swal.fire({ icon: 'error', title: 'Lỗi', text: e.message });
+                new bootstrap.Modal(document.getElementById('paymentModal')).show();
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Lỗi tạo đơn', text: err.message });
             }
         }
 
-        async function simulatePaymentSuccess() {
-            if (!currentBookingId) return;
-            const res = await fetch(`/api/bookings/confirm/${currentBookingId}`, { method: 'POST' });
-            if (res.ok) {
-                bootstrap.Modal.getInstance(document.getElementById('payModal')).hide();
+        async function confirmPayment() {
+            const btn = document.getElementById('btnConfirmPay');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Đang đối soát thanh toán...';
+
+            try {
+                const res = await fetch(`/api/bookings/confirm/${currentBookingId}`, { method: 'POST' });
+                const data = await res.json();
+
+                bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Thanh Toán Thành Công!',
-                    html: `
-                        <div class="text-start p-2">
-                            <p class="mb-1">Cảm ơn bạn đã lựa chọn <strong>TTLooks</strong>!</p>
-                            <p class="mb-1">Mã vé điện tử (E-ticket) của bạn là:</p>
-                            <h4 class="text-danger fw-bold my-2 text-center">${generatedTicketCode}</h4>
-                            <p class="small text-muted mb-0">Quý khách vui lòng lưu lại mã vé trên để xuất trình khi trải nghiệm dịch vụ.</p>
-                        </div>
-                    `,
+                    text: 'Vé điện tử (E-Ticket) có mã QR đã được phát hành thành công vào tài khoản của bạn.',
                     confirmButtonColor: '#ff5b00',
-                    confirmButtonText: 'Về lại trang chủ'
+                    confirmButtonText: 'Xem Vé Ngay'
                 }).then(() => {
-                    window.location.href = '/';
+                    window.location.href = 'my-bookings.html';
                 });
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: err.message });
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-circle-check me-2"></i>Tôi Đã Chuyển Khoản Thành Công';
             }
         }
 
