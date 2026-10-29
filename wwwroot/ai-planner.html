@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trợ Lý Lập Lịch Trình Du Lịch AI - TTLooks</title>
+    <!-- Bootstrap 5, FontAwesome & SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --brand-orange: #ff5b00;
+            --brand-orange-hover: #e04f00;
+        }
+        body { background-color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; color: #334155; }
+        .navbar-brand { font-weight: 800; color: var(--brand-orange) !important; font-size: 1.55rem; }
+        .btn-orange { background-color: var(--brand-orange); color: #fff; font-weight: 700; border: none; }
+        .btn-orange:hover { background-color: var(--brand-orange-hover); color: #fff; }
+
+        .timeline-day-badge {
+            background: linear-gradient(135deg, #ff5b00, #ff8533);
+            color: #fff;
+            padding: 8px 22px;
+            border-radius: 25px;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+            box-shadow: 0 4px 12px rgba(255, 91, 0, 0.25);
+        }
+        .plan-place-card {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            transition: all 0.25s ease;
+        }
+        .plan-place-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+        }
+        .plan-place-img { height: 160px; width: 100%; object-fit: cover; }
+        .time-tag { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 8px; }
+        .badge-morning { background-color: #ffc107; color: #212529; }
+        .badge-noon { background-color: #fd7e14; color: #fff; }
+        .badge-afternoon { background-color: #0d6efd; color: #fff; }
+        .badge-evening { background-color: #6f42c1; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-compass me-2"></i>TTLooks</a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <a href="saved-plans.html" class="btn btn-outline-warning text-dark btn-sm rounded-pill fw-bold">
+                    <i class="fa-solid fa-route me-1 text-warning"></i> Lịch Trình Đã Lưu
+                </a>
+                <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i>Về Trang Chủ</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <!-- Banner Tiêu đề -->
+        <div class="p-4 p-md-5 rounded-4 mb-4 text-white shadow" style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #ff5b00 100%);">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2">
+                        <i class="fa-solid fa-wand-magic-sparkles me-1"></i>Trí Tuệ Nhân Tạo 24/7
+                    </span>
+                    <h2 class="fw-bold mb-2">Trợ Lý AI Lên Lịch Trình Du Lịch Trực Quan</h2>
+                    <p class="mb-0 opacity-90">Nhập mong muốn chuyến đi, AI sẽ tự động phân bổ lịch trình 4 buổi: Sáng – Trưa – Chiều – Tối kèm hình ảnh minh họa sống động.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Khung nhập dữ liệu -->
+        <div class="card p-4 border-0 shadow-sm rounded-4 mb-4 bg-white">
+            <h5 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-sliders text-danger me-2"></i>Thiết Lập Kế Hoạch Chuyến Đi</h5>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-secondary">Bạn muốn đi đâu?</label>
+                    <input type="text" id="aiDest" class="form-control" placeholder="Ví dụ: Hội An, Đà Nẵng, Phú Quốc, Tokyo...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-secondary">Thời gian tham quan</label>
+                    <select id="aiDays" class="form-select">
+                        <option value="1 ngày">1 ngày (Khám phá nhanh)</option>
+                        <option value="2 ngày 1 đêm" selected>2 ngày 1 đêm</option>
+                        <option value="3 ngày 2 đêm">3 ngày 2 đêm</option>
+                        <option value="4 ngày 3 đêm">4 ngày 3 đêm</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-secondary">Ngân sách dự kiến / Người</label>
+                    <input type="text" id="aiBudget" class="form-control" placeholder="Ví dụ: 3 triệu, Tiết kiệm, 5 triệu...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-secondary">Sở thích & Phong cách</label>
+                    <input type="text" id="aiPref" class="form-control" placeholder="Ẩm thực, check-in, nghỉ dưỡng...">
+                </div>
+                <div class="col-12 text-end mt-3">
+                    <button class="btn btn-orange px-5 py-2 rounded-pill fw-bold" onclick="generateVisualAiPlan()">
+                        <i class="fa-solid fa-wand-magic-sparkles me-2"></i>Tạo Lịch Trình Trực Quan Ngay
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trạng thái chờ -->
+        <div id="aiPlanLoading" class="text-center py-5 d-none">
+            <div class="spinner-border text-warning" role="status" style="width: 3rem; height: 3rem;"></div>
+            <h5 class="fw-bold text-dark mt-3">Trợ lý AI đang thiết kế hành trình cho bạn...</h5>
+            <p class="text-muted small">Đang phân tích các điểm check-in, khách sạn và ẩm thực từng buổi Sáng - Trưa - Chiều - Tối</p>
+        </div>
+
+        <!-- Vùng hiển thị kết quả -->
+        <div id="aiVisualResultArea" class="d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold text-dark mb-0"><i class="fa-solid fa-route text-warning me-2"></i>Lộ Trình Du Lịch Khuyên Dùng</h4>
+                <button class="btn btn-outline-success btn-sm rounded-pill fw-bold px-3 shadow-sm" onclick="savePlanToAccount()">
+                    <i class="fa-solid fa-floppy-disk me-1"></i> Lưu Vào Lịch Trình Của Tôi
+                </button>
+            </div>
+
+            <!-- Khung lời khuyên từ AI -->
+            <div class="alert alert-info border-0 shadow-sm rounded-4 mb-4 p-3 bg-white border-start border-4 border-primary">
+                <div class="d-flex align-items-start">
+                    <i class="fa-solid fa-robot text-primary fs-3 me-3 mt-1"></i>
+                    <div>
+                        <h6 class="fw-bold text-primary mb-1">Lời khuyên từ Chuyên Gia Du Lịch AI:</h6>
+                        <div class="text-secondary small" id="aiAdviceText" style="white-space: pre-line; line-height: 1.7;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline từng ngày -->
+            <div id="visualTimelineContainer"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentPlanText = "";
+        let currentDest = "";
+        let currentDays = "";
+        let generatedVisualHtml = ""; // LƯU TOÀN BỘ HTML CÓ HÌNH ẢNH
+
+        async function generateVisualAiPlan() {
+            const dest = document.getElementById('aiDest').value.trim();
+            const days = document.getElementById('aiDays').value;
+            const budget = document.getElementById('aiBudget').value.trim() || '3.000.000 đ';
+            const pref = document.getElementById('aiPref').value.trim() || 'Khám phá văn hóa & ẩm thực đặc sản';
+
+            if (!dest) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng nhập điểm đến du lịch (ví dụ: Hội An, Đà Nẵng, Phú Quốc...)' });
+                return;
+            }
+
+            currentDest = dest;
+            currentDays = days;
+
+            document.getElementById('aiPlanLoading').classList.remove('d-none');
+            document.getElementById('aiVisualResultArea').classList.add('d-none');
+
+            try {
+                const res = await fetch('/api/ai/planner-visual', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ destination: dest, days: days, budget: budget, preferences: pref })
+                });
+
+                const data = await res.json();
+                currentPlanText = data.advice || `Lịch trình chi tiết khám phá ${dest} (${days}):\n- Sáng: Tham quan điểm đến nổi tiếng.\n- Trưa: Ăn trưa đặc sản.\n- Chiều: Check-in vui chơi.\n- Tối: Phố đêm & ngắm cảnh.`;
+                document.getElementById('aiAdviceText').innerText = currentPlanText;
+
+                let acts = data.activities || [];
+                if (!Array.isArray(acts) || acts.length === 0) {
+                    acts = [
+                        { title: `Check-in danh thắng ${dest}`, desc: 'Tham quan các công trình biểu tượng và chụp ảnh kỷ niệm.', imageUrl: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800' },
+                        { title: `Khám phá văn hóa ${dest}`, desc: 'Trải nghiệm cuộc sống bản địa và ngắm nhìn cảnh sắc thơ mộng.', imageUrl: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800' },
+                        { title: `Thiên nhiên & Biển đảo ${dest}`, desc: 'Thư giãn trong làn nước xanh và tận hưởng không khí trong lành.', imageUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800' }
+                    ];
+                }
+
+                const mealImages = [
+                    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600",
+                    "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600"
+                ];
+
+                const container = document.getElementById('visualTimelineContainer');
+                const dayCount = (days.includes('1')) ? 1 : (days.includes('3') ? 3 : (days.includes('4') ? 4 : 2));
+
+                let html = '';
+                let actIdx = 0;
+
+                for (let d = 1; d <= dayCount; d++) {
+                    const morningAct = acts[actIdx % acts.length] || {};
+                    actIdx++;
+                    const afternoonAct = acts[actIdx % acts.length] || {};
+                    actIdx++;
+
+                    html += `
+                        <div class="mb-5">
+                            <div class="timeline-day-badge"><i class="fa-regular fa-calendar-days me-2"></i>NGÀY ${d}: TRẢI NGHIỆM ${dest.toUpperCase()}</div>
+                            <div class="row g-3">
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card h-100 plan-place-card">
+                                        <img src="${morningAct.imageUrl || morningAct.img || 'https://images.unsplash.com/photo-1583417319070-4a69db38a482'}" class="plan-place-img">
+                                        <div class="card-body p-3 d-flex flex-column">
+                                            <span class="badge badge-morning time-tag mb-2">Sáng (08:00 - 11:30)</span>
+                                            <h6 class="fw-bold mb-1 text-truncate">${morningAct.title || 'Điểm tham quan sáng'}</h6>
+                                            <p class="text-muted small flex-grow-1">${morningAct.description || morningAct.desc || 'Check-in cảnh đẹp và tham quan danh lam tiêu biểu.'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card h-100 plan-place-card">
+                                        <img src="${mealImages[0]}" class="plan-place-img">
+                                        <div class="card-body p-3 d-flex flex-column">
+                                            <span class="badge badge-noon time-tag mb-2">Trưa (11:30 - 13:30)</span>
+                                            <h6 class="fw-bold mb-1 text-truncate">Ẩm Thực Vùng Miền</h6>
+                                            <p class="text-muted small flex-grow-1">Nghỉ ngơi, thưởng thức đặc sản ẩm thực nức tiếng tại ${dest}.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card h-100 plan-place-card">
+                                        <img src="${afternoonAct.imageUrl || afternoonAct.img || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'}" class="plan-place-img">
+                                        <div class="card-body p-3 d-flex flex-column">
+                                            <span class="badge badge-afternoon time-tag mb-2">Chiều (14:00 - 17:30)</span>
+                                            <h6 class="fw-bold mb-1 text-truncate">${afternoonAct.title || 'Vui chơi trải nghiệm'}</h6>
+                                            <p class="text-muted small flex-grow-1">${afternoonAct.description || afternoonAct.desc || 'Trải nghiệm vui chơi, dạo phố và chụp ảnh lưu niệm.'}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card h-100 plan-place-card">
+                                        <img src="${mealImages[1]}" class="plan-place-img">
+                                        <div class="card-body p-3 d-flex flex-column">
+                                            <span class="badge badge-evening time-tag mb-2">Tối (18:30 - 21:30)</span>
+                                            <h6 class="fw-bold mb-1 text-truncate">Phố Đêm & Ngắm Cảnh</h6>
+                                            <p class="text-muted small flex-grow-1">Dạo phố đêm lung linh, chợ đêm và thư giãn cafe ngắm cảnh.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                generatedVisualHtml = html; // LƯU LẠI TOÀN BỘ KHỐI HTML VÀ ẢNH
+                container.innerHTML = html;
+                document.getElementById('aiVisualResultArea').classList.remove('d-none');
+                document.getElementById('aiVisualResultArea').scrollIntoView({ behavior: 'smooth' });
+
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Có lỗi xảy ra: ' + err.message });
+            } finally {
+                document.getElementById('aiPlanLoading').classList.add('d-none');
+            }
+        }
+
+        async function savePlanToAccount() {
+            const user = JSON.parse(localStorage.getItem('user') || '{"userId": 2}');
+            const userId = user.userId || user.UserId || 2;
+
+            // ĐÓNG GÓI CẢ VĂN BẢN LỜI KHUYÊN + TOÀN BỘ THẺ HÌNH ẢNH DƯỚI DẠNG JSON
+            const fullPayloadDetails = JSON.stringify({
+                advice: currentPlanText,
+                timelineHtml: generatedVisualHtml
+            });
+
+            try {
+                const res = await fetch('/api/itineraries', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: userId,
+                        title: `Lịch trình khám phá ${currentDest} (${currentDays})`,
+                        destination: currentDest,
+                        days: currentDays,
+                        budget: document.getElementById('aiBudget').value.trim() || 'Hợp lý',
+                        preferences: document.getElementById('aiPref').value.trim() || 'Tổng hợp',
+                        planDetails: fullPayloadDetails
+                    })
+                });
+
+                if (res.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Đã lưu thành công!',
+                        text: 'Lịch trình có đầy đủ chữ & hình ảnh đã được lưu vào Lịch Trình Của Tôi!',
+                        confirmButtonColor: '#ff5b00',
+                        confirmButtonText: 'Xem Lịch Trình Của Tôi'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'saved-plans.html';
+                        }
+                    });
+                }
+            } catch (e) {
+                Swal.fire({ icon: 'error', title: 'Lỗi lưu', text: e.message });
+            }
+        }
+    </script>
+</body>
+</html>

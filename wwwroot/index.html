@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TTLooks - Điểm Đến, Khách Sạn & Ẩm Thực Du Lịch Đỉnh Cao</title>
+    <title>TTLooks - Điểm Đến, Khách Sạn, Ẩm Thực & Phương Tiện Di Chuyển</title>
     <!-- Bootstrap 5, FontAwesome & SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -25,15 +25,148 @@
         .btn-orange { background-color: var(--brand-orange); color: #fff; border: none; font-weight: 600; }
         .btn-orange:hover { background-color: var(--brand-orange-hover); color: #fff; }
 
-        /* 1. HERO BANNER SỐNG ĐỘNG */
+        /* MEGA MENU KLOOK GỌN GÀNG 1 HÀNG */
+        .klook-nav-wrapper {
+            background: #ffffff;
+            border-bottom: 1px solid #f1f5f9;
+            position: relative;
+            z-index: 1000;
+        }
+        .klook-nav-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 0 15px;
+            margin: 0 auto;
+            max-width: 1250px;
+            height: 50px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+        .klook-nav-bar::-webkit-scrollbar { display: none; }
+
+        .klook-nav-item {
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #334155;
+            white-space: nowrap;
+            transition: color 0.2s ease;
+        }
+        .klook-nav-item:hover, .klook-nav-item.active {
+            color: #ff5b00;
+        }
+        .klook-nav-item::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #ff5b00;
+            transform: scaleX(0);
+            transition: transform 0.25s ease;
+        }
+        .klook-nav-item:hover::after, .klook-nav-item.active::after {
+            transform: scaleX(1);
+        }
+
+        /* NÚT VOUCHER DUY NHẤT Ở CUỐI MENU DẪN SANG VOUCHERS.HTML */
+        .gift-voucher-btn {
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #dc2626 !important;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background-color: #fff1f2;
+            white-space: nowrap;
+            border: 1px solid #fecdd3;
+            transition: all 0.2s;
+        }
+        .gift-voucher-btn:hover {
+            background-color: #fee2e2;
+            transform: translateY(-1px);
+        }
+
+        .klook-mega-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+            border-top: 1px solid #f1f5f9;
+            display: none;
+            padding: 30px 0 40px 0;
+            animation: fadeInMenu 0.25s ease forwards;
+        }
+        @keyframes fadeInMenu {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mega-dest-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px 28px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .dest-card-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+            padding: 8px 12px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .dest-card-link:hover {
+            background-color: #fffaf5;
+            transform: translateX(4px);
+        }
+        .dest-thumb {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+            border: 2px solid #fff;
+        }
+        .dest-info-text small {
+            display: block;
+            color: #94a3b8;
+            font-size: 0.78rem;
+            line-height: 1.2;
+        }
+        .dest-info-text strong {
+            display: block;
+            color: #1e293b;
+            font-size: 0.95rem;
+            margin-top: 2px;
+        }
+
+        /* HERO BANNER */
         .hero-banner {
             position: relative;
             background: linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(255, 91, 0, 0.45) 100%), 
                         url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
             color: #fff;
-            padding: 60px 20px 50px;
+            padding: 55px 20px 45px;
             border-radius: 24px;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.12);
             overflow: hidden;
         }
@@ -47,6 +180,10 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.25);
             display: flex;
             align-items: center;
+            transition: box-shadow 0.2s ease;
+        }
+        .search-pill:focus-within {
+            box-shadow: 0 12px 30px rgba(255, 91, 0, 0.35);
         }
         .search-input {
             border: none;
@@ -57,22 +194,145 @@
             background: transparent;
         }
 
-        /* 2. TAB PHÂN LOẠI TINH GỌN VÀ HIỆN ĐẠI */
+        /* WHERE TO NEXT */
+        .where-next-wrapper {
+            position: relative;
+            margin-bottom: 45px;
+        }
+        .where-next-scroll {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px 4px 18px 4px;
+        }
+        .where-next-scroll::-webkit-scrollbar { display: none; }
+
+        .next-dest-card {
+            min-width: 175px;
+            max-width: 175px;
+            height: 240px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .next-dest-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .next-dest-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.85) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 16px;
+            color: #fff;
+            transition: background 0.3s ease;
+        }
+        .next-dest-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 14px 26px rgba(0,0,0,0.18);
+        }
+        .next-dest-card:hover img {
+            transform: scale(1.1);
+        }
+        .next-dest-card:hover .next-dest-overlay {
+            background: linear-gradient(180deg, rgba(255,91,0,0.15) 30%, rgba(0,0,0,0.9) 100%);
+        }
+        .next-dest-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 2px;
+            letter-spacing: -0.3px;
+        }
+        .next-dest-count {
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+        .scroll-next-btn {
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.18);
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+            color: #334155;
+        }
+        .scroll-next-btn:hover {
+            background: #ff5b00;
+            color: #ffffff;
+            transform: translateY(-50%) scale(1.08);
+        }
+
+        /* KHỐI TRANSPORT */
+        .transport-search-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+        .transport-type-btn {
+            border: none;
+            background: transparent;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #64748b;
+            padding: 8px 16px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .transport-type-btn.active {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .transport-box-input {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 10px 14px;
+        }
+
+        /* TAB PHÂN LOẠI */
         .nav-category {
             display: flex;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 32px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
         }
         .nav-category-btn {
             background: #fff;
             color: #475569;
             border: 1px solid #e2e8f0;
-            padding: 10px 24px;
+            padding: 10px 22px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -92,7 +352,7 @@
             box-shadow: 0 6px 16px rgba(255, 91, 0, 0.35);
         }
 
-        /* 3. THẺ TRẢI NGHIỆM ĐỒNG BỘ */
+        /* THẺ TRẢI NGHIỆM */
         .card-custom {
             border: none;
             border-radius: 18px;
@@ -103,7 +363,7 @@
             cursor: pointer;
         }
         .card-custom:hover {
-            transform: translateY(-8px);
+            transform: translateY(-7px);
             box-shadow: 0 14px 28px rgba(0,0,0,0.12);
         }
         .card-img-wrapper {
@@ -129,13 +389,13 @@
             padding: 4px 10px;
             border-radius: 8px;
             color: #fff;
-            letter-spacing: 0.3px;
         }
         .badge-place { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); }
         .badge-hotel { background: rgba(14, 165, 233, 0.9); backdrop-filter: blur(4px); }
         .badge-food  { background: rgba(234, 88, 12, 0.9); backdrop-filter: blur(4px); }
+        .badge-trans { background: rgba(16, 185, 129, 0.9); backdrop-filter: blur(4px); }
 
-        /* 4. TIMELINE LỊCH TRÌNH AI */
+        /* TIMELINE AI & CHATBOT */
         .timeline-day-badge {
             background: linear-gradient(135deg, #ff5b00, #ff8533);
             color: #fff;
@@ -154,7 +414,6 @@
             box-shadow: 0 4px 14px rgba(0,0,0,0.06);
             transition: transform 0.2s ease;
         }
-        .plan-place-card:hover { transform: translateY(-4px); }
         .plan-place-img { height: 130px; width: 100%; object-fit: cover; }
         .time-tag { font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 8px; }
         .badge-morning { background-color: #ffc107; color: #212529; }
@@ -162,14 +421,12 @@
         .badge-afternoon { background-color: #0d6efd; color: #fff; }
         .badge-evening { background-color: #6f42c1; color: #fff; }
 
-        /* 5. CHATBOT AI CỐ ĐỊNH */
         .chat-bubble-btn {
             position: fixed; bottom: 25px; right: 25px; width: 58px; height: 58px; border-radius: 50%;
             background: linear-gradient(135deg, #ff5b00, #ff7a29); color: #fff; display: flex;
             align-items: center; justify-content: center; font-size: 1.5rem;
-            box-shadow: 0 8px 24px rgba(255, 91, 0, 0.38); cursor: pointer; z-index: 9999; transition: transform .2s;
+            box-shadow: 0 8px 24px rgba(255, 91, 0, 0.38); cursor: pointer; z-index: 9999;
         }
-        .chat-bubble-btn:hover { transform: scale(1.08); }
         .chat-window {
             position: fixed; bottom: 92px; right: 25px; width: 380px; max-width: 92vw; height: 520px;
             background: #fff; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); display: none;
@@ -189,30 +446,26 @@
         }
         .chat-msg.bot {
             background: #fff; color: #1e293b; border: 1px solid #e2e8f0;
-            align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            align-self: flex-start; border-bottom-left-radius: 4px;
         }
         .chat-msg.user {
             background: var(--brand-orange); color: #fff;
             align-self: flex-end; border-bottom-right-radius: 4px;
         }
-        .quick-tag {
-            background: #fff; border: 1px solid #ffccb0; color: #ff5b00;
-            border-radius: 15px; padding: 4px 10px; font-size: 0.74rem; font-weight: 600;
-            cursor: pointer; transition: all .2s ease;
-        }
-        .quick-tag:hover { background: #ff5b00; color: #fff; }
     </style>
 </head>
 <body class="bg-light">
 
-    <!-- Navbar -->
+    <!-- NAVBAR CHÍNH: KHÔI PHỤC NÚT AI, ĐĂNG NHẬP, ĐĂNG KÝ VÀ MENU TÀI KHOẢN -->
     <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand" href="/"><i class="fa-solid fa-compass me-2"></i>TTLooks</a>
             <div class="ms-auto d-flex align-items-center gap-2">
-                <button class="btn btn-outline-warning text-dark fw-bold btn-sm rounded-pill me-2" data-bs-toggle="modal" data-bs-target="#aiPlanModal">
-                    <i class="fa-solid fa-wand-magic-sparkles text-warning me-1"></i> Trợ Lý Lập Lịch Trình AI
-                </button>
+                <!-- MỚI: MỞ THẲNG SANG TRANG AI-PLANNER.HTML ĐỘC LẬP -->
+<a href="ai-planner.html" class="btn btn-outline-warning text-dark fw-bold btn-sm rounded-pill me-2">
+    <i class="fa-solid fa-wand-magic-sparkles text-warning me-1"></i> Trợ Lý Lập Lịch Trình AI
+</a>
+                <!-- VÙNG TÀI KHOẢN ĐĂNG NHẬP / ĐĂNG KÝ / PROFILE -->
                 <div id="authNavArea">
                     <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng nhập</button>
                     <button class="btn btn-sm btn-orange rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#registerModal">Đăng ký</button>
@@ -221,52 +474,204 @@
         </div>
     </nav>
 
-    <!-- Main Container -->
-    <div class="container py-3">
+    <!-- MEGA MENU HOVER KLOOK (1 HÀNG DUY NHẤT, CHỈ CÓ 1 NÚT VOUCHER DUY NHẤT) -->
+    <div class="klook-nav-wrapper" onmouseleave="hideMegaDropdown()">
+        <div class="klook-nav-bar">
+            <div class="klook-nav-item active" onmouseenter="showMegaTab('destinations', this)">Điểm đến phổ biến</div>
+            <div class="klook-nav-item" onmouseenter="showMegaTab('regions', this)">Khu vực nổi bật</div>
+            <div class="klook-nav-item" onmouseenter="showMegaTab('landmarks', this)">Địa danh nổi tiếng</div>
+            <div class="klook-nav-item" onmouseenter="showMegaTab('transport', this)"><i class="fa-solid fa-van-shuttle me-1 text-success"></i>Phương tiện di chuyển</div>
+            <div class="klook-nav-item" onmouseenter="showMegaTab('explore', this)">Khám phá TTLooks</div>
+            
+            <!-- NÚT DUY NHẤT DẪN VÀO TRANG VOUCHERS.HTML MỚI -->
+            <a href="vouchers.html" target="_blank" class="ms-auto gift-voucher-btn" onmouseenter="hideMegaDropdown()">
+                <i class="fa-solid fa-gift text-danger fs-6"></i> Thẻ quà tặng & Voucher (Đến Kho Mã)
+            </a>
+        </div>
 
-        <!-- Hero Banner sống động -->
+        <!-- BẢNG DROPDOWN TỰ ĐỘNG XỔ XUỐNG -->
+        <div class="klook-mega-dropdown" id="klookMegaDropdown">
+            <div class="mega-dest-grid" id="megaGridContent">
+                <!-- Dữ liệu JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container py-4">
+
+        <!-- Hero Banner -->
         <div class="hero-banner text-center">
             <h1 class="display-6 fw-bold mb-2">Trải Nghiệm Du Lịch Tuyển Chọn Cùng TTLooks ✈️</h1>
-            <p class="fs-6 opacity-90 mb-4">Khám phá các điểm đến check-in, khách sạn nghỉ dưỡng cao cấp và quán ăn đặc sắc</p>
+            <p class="fs-6 opacity-90 mb-4">Khám phá các điểm đến check-in, khách sạn nghỉ dưỡng cao cấp, ẩm thực và xe đưa đón du lịch</p>
 
+            <!-- THANH TÌM KIẾM SIÊU NHẠY REAL-TIME -->
             <div class="search-pill mb-3">
                 <i class="fa-solid fa-magnifying-glass text-muted fs-5 me-3"></i>
-                <input type="text" id="txtSearch" class="search-input" placeholder="Tìm điểm đến, khách sạn (Bà Nà, Furama, Samgyeopsal, Vịnh Marina...)" onkeypress="if(event.key==='Enter') doSearch()">
+                <input type="text" id="txtSearch" class="search-input" placeholder="Nhập tên điểm đến, thành phố, dịch vụ (Bà Nà, Hội An, Phú Quốc, Tokyo, Xe đưa đón...)" oninput="handleInstantSearch(this.value)">
                 <button class="btn btn-orange rounded-pill px-4" onclick="doSearch()">Tìm kiếm</button>
             </div>
 
             <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
-                <span class="small opacity-75"><i class="fa-solid fa-fire text-warning me-1"></i>Khám phá nhanh:</span>
+                <span class="small opacity-75"><i class="fa-solid fa-fire text-warning me-1"></i>Gợi ý nhanh:</span>
                 <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="filterByKeyword('Bà Nà')">Bà Nà Hills</span>
-                <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="filterByKeyword('Resort')">Resort Ven Biển</span>
-                <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="filterByKeyword('Buffet')">Buffet Đặc Sản</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="filterByKeyword('Hội An')">Hội An</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="filterByKeyword('Đà Lạt')">Đà Lạt</span>
+                <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="filterByKeyword('Tokyo')">Tokyo</span>
                 <span class="badge bg-white text-dark p-2 px-3 rounded-pill" style="cursor:pointer;" onclick="filterByKeyword('Singapore')">Singapore</span>
             </div>
         </div>
 
-        <!-- 3 Tab Phân Loại Tinh Gọn: Điểm Đến, Khách Sạn, Quán Ăn -->
+        <!-- MỤC WHERE TO NEXT -->
+        <div class="where-next-wrapper">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h4 class="fw-bold text-dark mb-0">Where to next? / Điểm đến tiếp theo?</h4>
+                    <small class="text-muted">Các thành phố được du khách yêu thích và đặt nhiều nhất</small>
+                </div>
+                <a href="javascript:void(0)" onclick="filterByKeyword('')" class="text-decoration-none fw-bold small text-orange">See more &rarr;</a>
+            </div>
+
+            <div class="position-relative">
+                <div class="where-next-scroll" id="whereNextContainer">
+                    <div class="next-dest-card" onclick="filterByKeyword('Osaka')">
+                        <img src="https://images.unsplash.com/photo-1590559899731-a382839e5549?w=400" alt="Osaka">
+                        <div class="next-dest-overlay">
+                            <div class="next-dest-title">Osaka</div>
+                            <div class="next-dest-count">429 activities</div>
+                        </div>
+                    </div>
+                    <div class="next-dest-card" onclick="filterByKeyword('Nha Trang')">
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400" alt="Nha Trang">
+                        <div class="next-dest-overlay">
+                            <div class="next-dest-title">Nha Trang</div>
+                            <div class="next-dest-count">100 activities</div>
+                        </div>
+                    </div>
+                    <div class="next-dest-card" onclick="filterByKeyword('Đà Nẵng')">
+                        <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=400" alt="Da Nang">
+                        <div class="next-dest-overlay">
+                            <div class="next-dest-title">Da Nang</div>
+                            <div class="next-dest-count">217 activities</div>
+                        </div>
+                    </div>
+                    <div class="next-dest-card" onclick="filterByKeyword('Kyoto')">
+                        <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400" alt="Kyoto">
+                        <div class="next-dest-overlay">
+                            <div class="next-dest-title">Kyoto</div>
+                            <div class="next-dest-count">733 activities</div>
+                        </div>
+                    </div>
+                    <div class="next-dest-card" onclick="filterByKeyword('Tokyo')">
+                        <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=400" alt="Tokyo">
+                        <div class="next-dest-overlay">
+                            <div class="next-dest-title">Tokyo</div>
+                            <div class="next-dest-count">1341 activities</div>
+                        </div>
+                    </div>
+                    <div class="next-dest-card" onclick="filterByKeyword('Hồ Chí Minh')">
+                        <img src="https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=400" alt="Ho Chi Minh">
+                        <div class="next-dest-overlay">
+                            <div class="next-dest-title">Ho Chi Minh</div>
+                            <div class="next-dest-count">337 activities</div>
+                        </div>
+                    </div>
+                    <div class="next-dest-card" onclick="filterByKeyword('Singapore')">
+                        <img src="https://images.unsplash.com/photo-1565967511849-76a60a516170?w=400" alt="Singapore">
+                        <div class="next-dest-overlay">
+                            <div class="next-dest-title">Singapore</div>
+                            <div class="next-dest-count">560 activities</div>
+                        </div>
+                    </div>
+                    <div class="next-dest-card" onclick="filterByKeyword('Seoul')">
+                        <img src="https://images.unsplash.com/photo-1538485399081-7191377e8241?w=400" alt="Seoul">
+                        <div class="next-dest-overlay">
+                            <div class="next-dest-title">Seoul</div>
+                            <div class="next-dest-count">890 activities</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="scroll-next-btn shadow" onclick="scrollWhereNext()">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- KHỐI FORM TRANSPORT -->
+        <div class="transport-search-card d-none" id="transportSearchBox">
+            <div class="d-flex gap-2 mb-3 border-bottom pb-2">
+                <button class="transport-type-btn active" id="btnAirportTransfer" onclick="switchTransportMode('AIRPORT')">
+                    <i class="fa-solid fa-plane-arrival text-success"></i> Airport transfers (Đưa đón sân bay)
+                </button>
+                <button class="transport-type-btn" id="btnCarRentals" onclick="switchTransportMode('RENTAL')">
+                    <i class="fa-solid fa-car-side text-primary"></i> Car rentals (Thuê xe riêng / Có tài xế)
+                </button>
+            </div>
+            <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <div class="transport-box-input">
+                        <small class="text-muted d-block fw-bold" style="font-size:0.75rem;">Điểm đón (From):</small>
+                        <input type="text" id="transFrom" class="form-control border-0 p-0 bg-transparent fw-bold small" value="Sân Bay Quốc Tế Đà Nẵng (DAD)">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="transport-box-input">
+                        <small class="text-muted d-block fw-bold" style="font-size:0.75rem;">Điểm đến (To):</small>
+                        <input type="text" id="transTo" class="form-control border-0 p-0 bg-transparent fw-bold small" placeholder="Khách sạn, Bà Nà Hills, Phố Cổ Hội An...">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="transport-box-input">
+                        <small class="text-muted d-block fw-bold" style="font-size:0.75rem;">Ngày đón:</small>
+                        <input type="date" id="transDate" class="form-control border-0 p-0 bg-transparent fw-bold small">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-orange w-100 py-3 rounded-3 fw-bold" onclick="searchTransportRoute()">
+                        <i class="fa-solid fa-magnifying-glass me-1"></i> Tìm Chuyến
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 Tab Phân Loại: Điểm Đến, Khách Sạn, Quán Ăn & Transport -->
         <div class="nav-category">
-            <button class="nav-category-btn active" onclick="switchCategory('ALL', this)">
+            <button class="nav-category-btn active" id="tabALL" onclick="switchCategory('ALL', this)">
                 <i class="fa-solid fa-border-all"></i> Tất Cả Tuyển Chọn
             </button>
-            <button class="nav-category-btn" onclick="switchCategory('PLACE', this)">
+            <button class="nav-category-btn" id="tabPLACE" onclick="switchCategory('PLACE', this)">
                 <i class="fa-solid fa-mountain-sun text-warning"></i> Điểm Đến Check-in
             </button>
-            <button class="nav-category-btn" onclick="switchCategory('HOTEL', this)">
+            <button class="nav-category-btn" id="tabHOTEL" onclick="switchCategory('HOTEL', this)">
                 <i class="fa-solid fa-hotel text-info"></i> Khách Sạn & Resort
             </button>
-            <button class="nav-category-btn" onclick="switchCategory('FOOD', this)">
+            <button class="nav-category-btn" id="tabFOOD" onclick="switchCategory('FOOD', this)">
                 <i class="fa-solid fa-utensils text-danger"></i> Quán Ăn & Đặc Sản
+            </button>
+            <button class="nav-category-btn" id="tabTRANSPORT" onclick="switchCategory('TRANSPORT', this)">
+                <i class="fa-solid fa-van-shuttle text-success"></i> Transport (Xe & Đưa Đón)
             </button>
         </div>
 
-        <!-- Vùng hiển thị danh sách thẻ -->
-        <div class="row g-4 mb-5" id="mainCardList">
+        <!-- VÙNG HIỂN THỊ DANH SÁCH 10 TRẢI NGHIỆM -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-fire text-danger me-2"></i>Trải Nghiệm Nổi Bật Dành Cho Bạn</h5>
+            <small class="text-muted" id="searchResultCount"></small>
+        </div>
+
+        <div class="row g-4 mb-4" id="mainCardList">
             <div class="col-12 text-center text-muted py-5"><div class="spinner-border text-warning" role="status"></div></div>
+        </div>
+
+        <!-- NÚT XEM THÊM: CUỐN CHIẾU 10-15 CÁI MỖI LẦN NHẤN -->
+        <div class="text-center mb-5" id="seeMoreArea" style="display: none;">
+            <button class="btn btn-outline-danger rounded-pill px-5 py-2 fw-bold" id="btnLoadMore" onclick="loadMoreCards()">
+                Xem thêm trải nghiệm <i class="fa-solid fa-chevron-down ms-1"></i>
+            </button>
         </div>
     </div>
 
-    <!-- MODAL TRỢ LÝ AI LẬP LỊCH TRÌNH CÓ HÌNH ẢNH MINH HỌA -->
+    <!-- MODAL TRỢ LÝ AI -->
     <div class="modal fade" id="aiPlanModal" tabindex="-1">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow">
@@ -289,23 +694,23 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label small fw-bold">Ngân sách dự kiến</label>
-                            <input type="text" id="aiBudget" class="form-control" placeholder="Ví dụ: 3 triệu / người">
+                            <label class="form-label small fw-bold">Ngân sách</label>
+                            <input type="text" id="aiBudget" class="form-control" placeholder="3 triệu / người">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label small fw-bold">Sở thích</label>
-                            <input type="text" id="aiPref" class="form-control" placeholder="Ẩm thực, check-in, nghỉ dưỡng...">
+                            <input type="text" id="aiPref" class="form-control" placeholder="Ẩm thực, check-in...">
                         </div>
                         <div class="col-12 text-end">
                             <button class="btn btn-orange px-4 py-2 rounded-pill fw-bold" onclick="generateVisualAiPlan()">
-                                <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Tạo Lịch Trình Trực Quan Có Hình Ảnh
+                                <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Tạo Lịch Trình Trực Quan
                             </button>
                         </div>
                     </div>
 
                     <div id="aiPlanLoading" class="text-center py-5 d-none">
                         <div class="spinner-border text-warning" role="status"></div>
-                        <p class="text-muted mt-2">Trợ lý AI đang thiết kế lịch trình và tổng hợp hình ảnh các buổi Sáng - Trưa - Chiều - Tối cho bạn...</p>
+                        <p class="text-muted mt-2">Trợ lý AI đang thiết kế lịch trình...</p>
                     </div>
 
                     <div id="aiVisualResultArea" class="d-none">
@@ -318,8 +723,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <h5 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-route text-warning me-2"></i>Lộ Trình Trải Nghiệm Khuyên Dùng</h5>
                         <div id="visualTimelineContainer"></div>
                     </div>
                 </div>
@@ -327,7 +730,7 @@
         </div>
     </div>
 
-    <!-- Modal Đăng nhập -->
+    <!-- Modal Đăng nhập / Đăng ký -->
     <div class="modal fade" id="loginModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow">
@@ -350,7 +753,6 @@
         </div>
     </div>
 
-    <!-- Modal Đăng ký -->
     <div class="modal fade" id="registerModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow">
@@ -398,19 +800,11 @@
             </div>
             <button type="button" class="btn-close btn-close-white" onclick="toggleChat()"></button>
         </div>
-        
         <div class="chat-body" id="chatMsgs">
             <div class="chat-msg bot">
-Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Bạn đang tìm điểm check-in sống ảo, khách sạn nghỉ dưỡng view biển hay các quán ăn ngon nức tiếng ạ?
+Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Bạn cần tư vấn điểm đến, đặt vé hay thuê xe đưa đón sân bay không ạ?
             </div>
         </div>
-
-        <div class="px-3 py-2 bg-white border-top d-flex gap-1 flex-wrap" id="quickQuestionsArea">
-            <span class="quick-tag" onclick="askQuick('Bà Nà Hills nên đi giờ nào và mặc gì?')">👗 Đi Bà Nà mặc gì?</span>
-            <span class="quick-tag" onclick="askQuick('Quán ăn đặc sản ngon nhất Đà Nẵng?')">🍲 Ăn gì ở Đà Nẵng</span>
-            <span class="quick-tag" onclick="askQuick('Khách sạn resort nào đẹp nhất Phú Quốc?')">🏨 Resort Phú Quốc</span>
-        </div>
-
         <div class="p-2 bg-white border-top d-flex gap-2">
             <input type="text" id="chatInput" class="form-control form-control-sm rounded-pill" placeholder="Hỏi AI bất kỳ điều gì..." onkeypress="if(event.key==='Enter') sendChat()">
             <button class="btn btn-warning btn-sm rounded-circle text-white px-2" onclick="sendChat()"><i class="fa-solid fa-paper-plane"></i></button>
@@ -420,165 +814,210 @@ Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Bạn đang tìm đi�
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Dữ liệu tuyển chọn tinh gọn: Điểm Đến, Khách Sạn & Quán Ăn
-        const curatedItems = [
-            // 1. ĐIỂM ĐẾN
-            {
-                id: 1,
-                type: 'PLACE',
-                title: 'Sun World Bà Nà Hills (Đà Nẵng)',
-                desc: 'Check-in Cầu Vàng sương mây, làng Pháp cổ tích và tuyến cáp treo đạt nhiều kỷ lục thế giới.',
-                price: 900000,
-                rating: '4.9',
-                badgeText: 'Điểm Đến',
-                badgeClass: 'badge-place',
-                img: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?auto=format&fit=crop&w=700&q=80'
-            },
-            {
-                id: 2,
-                type: 'PLACE',
-                title: 'Công Viên Universal Studios Singapore',
-                desc: 'Thiên đường giải trí hàng đầu Sentosa với tàu lượn Battlestar và Transformers Ride mạo hiểm.',
-                price: 1480000,
-                rating: '4.9',
-                badgeText: 'Điểm Đến',
-                badgeClass: 'badge-place',
-                img: 'https://images.unsplash.com/photo-1565967511849-76a60a516170?auto=format&fit=crop&w=700&q=80'
-            },
-            {
-                id: 3,
-                type: 'PLACE',
-                title: 'Đài Quan Sát Tháp N Seoul Tower',
-                desc: 'Ngắm toàn cảnh thủ đô Seoul lấp lánh về đêm và lưu dấu ổ khóa tình yêu vĩnh cửu.',
-                price: 210000,
-                rating: '4.8',
-                badgeText: 'Điểm Đến',
-                badgeClass: 'badge-place',
-                img: 'https://images.unsplash.com/photo-1546874177-9e664107314e?auto=format&fit=crop&w=700&q=80'
-            },
+        const megaData = {
+            destinations: [
+                { name: "Tokyo", searchKey: "Tokyo", sub: "Hoạt động du lịch tại", img: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=150" },
+                { name: "Osaka", searchKey: "Osaka", sub: "Hoạt động du lịch tại", img: "https://images.unsplash.com/photo-1590559899731-a382839e5549?w=150" },
+                { name: "Hồng Kông", searchKey: "Hồng Kông", sub: "Hoạt động du lịch tại", img: "https://images.unsplash.com/photo-1506158669146-619067261a76?w=150" },
+                { name: "Kyoto", searchKey: "Kyoto", sub: "Hoạt động du lịch tại", img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=150" },
+                { name: "Bangkok", searchKey: "Bangkok", sub: "Hoạt động du lịch tại", img: "https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=150" },
+                { name: "Dubai", searchKey: "Dubai", sub: "Hoạt động du lịch tại", img: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=150" },
+                { name: "Đà Nẵng", searchKey: "Đà Nẵng", sub: "Hoạt động du lịch tại", img: "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=150" },
+                { name: "Phú Quốc", searchKey: "Phú Quốc", sub: "Hoạt động du lịch tại", img: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=150" }
+            ],
+            regions: [
+                { name: "Đông Nam Á", searchKey: "Đà Nẵng", sub: "Khám phá khu vực", img: "https://images.unsplash.com/photo-1528127269322-539801943592?w=150" },
+                { name: "Đông Á", searchKey: "Tokyo", sub: "Khám phá khu vực", img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=150" },
+                { name: "Châu Âu", searchKey: "Paris", sub: "Khám phá khu vực", img: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=150" }
+            ],
+            landmarks: [
+                { name: "Bà Nà Hills & Cầu Vàng", searchKey: "Bà Nà", sub: "Địa danh nổi tiếng", img: "https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=150" },
+                { name: "Universal Studios", searchKey: "Universal", sub: "Công viên giải trí", img: "https://images.unsplash.com/photo-1565967511849-76a60a516170?w=150" },
+                { name: "VinWonders Safari", searchKey: "VinWonders", sub: "Khu vui chơi safari", img: "https://images.unsplash.com/photo-1544644181-1484b3fdfc62?w=150" }
+            ],
+            transport: [
+                { name: "Xe Đưa Đón Sân Bay", searchKey: "Đưa Đón", sub: "Đưa đón tận nơi", img: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=150" },
+                { name: "Xe Bus Đi Bà Nà", searchKey: "Xe Bus", sub: "Tuyến cố định 2 chiều", img: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=150" }
+            ],
+            explore: [
+                { name: "Khách Sạn & Resort", searchKey: "Resort", sub: "Nghỉ dưỡng đẳng cấp", img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=150" },
+                { name: "Buffet & Ẩm Thực", searchKey: "Buffet", sub: "Đặc sản các vùng miền", img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=150" }
+            ]
+        };
 
-            // 2. KHÁCH SẠN & RESORT
-            {
-                id: 4,
-                type: 'HOTEL',
-                title: 'Furama Resort 5 Sao Đà Nẵng',
-                desc: 'Khu nghỉ dưỡng di sản bên bãi biển Mỹ Khê với hồ bơi vô cực ngập tràn cây xanh nhiệt đới.',
-                price: 2850000,
-                rating: '5.0',
-                badgeText: 'Khách Sạn',
-                badgeClass: 'badge-hotel',
-                img: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=700&q=80'
-            },
-            {
-                id: 5,
-                type: 'HOTEL',
-                title: 'Vinpearl Resort & Spa Phú Quốc',
-                desc: 'Biệt thự hướng biển sang trọng tại Bãi Dài, tặng kèm bữa sáng buffet tiêu chuẩn quốc tế.',
-                price: 3200000,
-                rating: '4.9',
-                badgeText: 'Khách Sạn',
-                badgeClass: 'badge-hotel',
-                img: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=700&q=80'
-            },
-            {
-                id: 6,
-                type: 'HOTEL',
-                title: 'Marina Bay Sands Singapore (1 Đêm)',
-                desc: 'Biểu tượng nghỉ dưỡng thế giới với hồ bơi vô cực trên tầng thượng ngắm trọn vịnh Marina.',
-                price: 7500000,
-                rating: '5.0',
-                badgeText: 'Khách Sạn',
-                badgeClass: 'badge-hotel',
-                img: 'https://images.unsplash.com/photo-1506354666786-959d6d497f1a?auto=format&fit=crop&w=700&q=80'
-            },
+        function showMegaTab(type, el) {
+            const list = megaData[type] || megaData.destinations;
+            const container = document.getElementById('megaGridContent');
+            const dropdown = document.getElementById('klookMegaDropdown');
+            document.querySelectorAll('.klook-nav-item').forEach(item => item.classList.remove('active'));
+            if (el) el.classList.add('active');
 
-            // 3. QUÁN ĂN & ĐẶC SẢN
-            {
-                id: 7,
-                type: 'FOOD',
-                title: 'Buffet Bốn Mùa Beer Plaza (Bà Nà)',
-                desc: 'Hơn 100 món ăn Á - Âu và đặc sản địa phương thịnh soạn trong không gian lễ hội rộn ràng.',
-                price: 350000,
-                rating: '4.8',
-                badgeText: 'Ẩm Thực',
-                badgeClass: 'badge-food',
-                img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=700&q=80'
-            },
-            {
-                id: 8,
-                type: 'FOOD',
-                title: 'Buffet Cua Sốt Ớt Chilli Crab Vịnh Marina',
-                desc: 'Đại tiệc hải sản tươi sống và món cua sốt ớt trứ danh quốc đảo sư tử Singapore.',
-                price: 850000,
-                rating: '4.9',
-                badgeText: 'Ẩm Thực',
-                badgeClass: 'badge-food',
-                img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=700&q=80'
-            },
-            {
-                id: 9,
-                type: 'FOOD',
-                title: 'Buffet Nướng Samgyeopsal Myeongdong Seoul',
-                desc: 'Bữa tiệc thịt nướng thượng hạng và bò Wagyu chuẩn vị kèm panchan truyền thống Hàn Quốc.',
-                price: 420000,
-                rating: '4.9',
-                badgeText: 'Ẩm Thực',
-                badgeClass: 'badge-food',
-                img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=80'
-            }
-        ];
+            container.innerHTML = list.map(item => `
+                <a href="javascript:void(0)" class="dest-card-link" onclick="handleMegaClick('${item.searchKey || item.name}')">
+                    <img src="${item.img}" class="dest-thumb" alt="${item.name}">
+                    <div class="dest-info-text">
+                        <small>${item.sub}</small>
+                        <strong>${item.name}</strong>
+                    </div>
+                </a>
+            `).join('');
+            dropdown.style.display = 'block';
+        }
 
+        function hideMegaDropdown() {
+            document.getElementById('klookMegaDropdown').style.display = 'none';
+        }
+
+        function handleMegaClick(key) {
+            hideMegaDropdown();
+            currentCategory = 'ALL';
+            document.querySelectorAll('.nav-category-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tabALL').classList.add('active');
+            filterByKeyword(key);
+        }
+
+        let allActivities = [];
         let currentCategory = 'ALL';
         let currentKeyword = '';
+        let displayLimit = 10;
+        const STEP_SIZE = 12;
+        let searchTimeout = null;
         let chatHistory = [];
+
+        function scrollWhereNext() {
+            document.getElementById('whereNextContainer').scrollBy({ left: 360, behavior: 'smooth' });
+        }
+
+        function removeVietnameseTones(str) {
+            if (!str) return '';
+            str = str.toLowerCase();
+            str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+            str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+            str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+            str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+            str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+            str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+            str = str.replace(/đ/g, "d");
+            return str.trim();
+        }
+
+        function handleInstantSearch(val) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentKeyword = val.trim();
+                displayLimit = 10;
+                renderCards();
+            }, 200);
+        }
+
+        async function loadActivitiesFromDB() {
+            try {
+                const res = await fetch('/api/activities');
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) allActivities = data;
+            } catch (err) {
+                console.warn(err);
+            }
+            renderCards();
+        }
 
         function renderCards() {
             const container = document.getElementById('mainCardList');
-            let list = curatedItems;
+            const seeMoreArea = document.getElementById('seeMoreArea');
+            const countLabel = document.getElementById('searchResultCount');
+            const btnLoadMore = document.getElementById('btnLoadMore');
+
+            let list = allActivities;
 
             if (currentCategory !== 'ALL') {
-                list = list.filter(x => x.type === currentCategory);
+                list = list.filter(x => {
+                    const cat = (x.category || x.type || '').toUpperCase();
+                    if (currentCategory === 'PLACE') return cat.includes('ĐIỂM ĐẾN') || cat === 'PLACE';
+                    if (currentCategory === 'HOTEL') return cat.includes('KHÁCH SẠN') || cat === 'HOTEL';
+                    if (currentCategory === 'FOOD') return cat.includes('QUÁN ĂN') || cat.includes('ẨM THỰC') || cat === 'FOOD';
+                    if (currentCategory === 'TRANSPORT') return cat.includes('TRANSPORT') || cat.includes('XE');
+                    return true;
+                });
             }
 
             if (currentKeyword) {
-                const k = currentKeyword.toLowerCase();
-                list = list.filter(x => x.title.toLowerCase().includes(k) || x.desc.toLowerCase().includes(k));
+                const keywords = currentKeyword.split(/[,&/]/).map(k => k.trim()).filter(k => k.length > 0);
+                list = list.filter(x => {
+                    const title = (x.title || '').toLowerCase();
+                    const city = (x.city || '').toLowerCase();
+                    const desc = (x.description || x.desc || '').toLowerCase();
+                    const cat = (x.category || '').toLowerCase();
+                    const titleNoTone = removeVietnameseTones(title);
+                    const cityNoTone = removeVietnameseTones(city);
+
+                    return keywords.some(k => {
+                        const rawK = k.toLowerCase();
+                        const noToneK = removeVietnameseTones(k);
+                        return title.includes(rawK) || city.includes(rawK) || desc.includes(rawK) || cat.includes(rawK) ||
+                               titleNoTone.includes(noToneK) || cityNoTone.includes(noToneK);
+                    });
+                });
             }
 
-            if (list.length === 0) {
-                container.innerHTML = '<div class="col-12 text-center text-muted py-5"><i class="fa-solid fa-magnifying-glass fs-3 d-block mb-2"></i>Không tìm thấy kết quả phù hợp.</div>';
+            const totalFound = list.length;
+            countLabel.innerText = `Tìm thấy ${totalFound} hoạt động`;
+
+            if (totalFound === 0) {
+                container.innerHTML = '<div class="col-12 text-center text-muted py-5"><i class="fa-solid fa-magnifying-glass fs-2 d-block mb-2 text-warning"></i>Không tìm thấy dịch vụ phù hợp.</div>';
+                seeMoreArea.style.display = 'none';
                 return;
             }
 
-            container.innerHTML = list.map(item => `
-                <div class="col-lg-4 col-md-6">
-                    <div class="card h-100 card-custom" onclick="openBooking(${item.id})">
-                        <div class="card-img-wrapper">
-                            <img src="${item.img}" alt="${item.title}">
-                            <span class="badge-type ${item.badgeClass}">${item.badgeText}</span>
-                        </div>
-                        <div class="card-body d-flex flex-column p-3">
-                            <h6 class="fw-bold text-dark text-truncate mb-2">${item.title}</h6>
-                            <p class="card-text text-muted small flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.desc}</p>
-                            <div class="d-flex align-items-center mb-2 small text-warning">
-                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                                <span class="text-dark fw-bold ms-1">${item.rating}</span>
+            const displayedList = list.slice(0, displayLimit);
+
+            container.innerHTML = displayedList.map(item => {
+                const id = item.activityId || item.id;
+                const img = item.imageUrl || item.img || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e';
+                const title = item.title || '';
+                const desc = item.description || item.desc || '';
+                const price = item.price || 0;
+                const city = item.city || 'Việt Nam';
+
+                return `
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 card-custom" onclick="openBooking(${id})">
+                            <div class="card-img-wrapper">
+                                <img src="${img}" alt="${title}">
+                                <span class="badge-type badge-place"><i class="fa-solid fa-location-dot me-1"></i>${city}</span>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2">
-                                <div>
-                                    <small class="text-muted d-block" style="font-size:0.75rem;">Giá từ</small>
-                                    <span class="text-danger fw-bold fs-5">${Number(item.price).toLocaleString('vi-VN')} đ</span>
+                            <div class="card-body d-flex flex-column p-3">
+                                <h6 class="fw-bold text-dark text-truncate mb-2">${title}</h6>
+                                <p class="card-text text-muted small flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${desc}</p>
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top mt-2">
+                                    <div>
+                                        <small class="text-muted d-block" style="font-size:0.75rem;">Giá từ</small>
+                                        <span class="text-danger fw-bold fs-5">${Number(price).toLocaleString('vi-VN')} đ</span>
+                                    </div>
+                                    <button class="btn btn-sm btn-orange rounded-pill px-3" onclick="event.stopPropagation(); openBooking(${id})">Đặt Ngay</button>
                                 </div>
-                                <button class="btn btn-sm btn-orange rounded-pill px-3" onclick="event.stopPropagation(); openBooking(${item.id})">Đặt Ngay</button>
                             </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+
+            if (totalFound > displayLimit) {
+                const remaining = totalFound - displayLimit;
+                btnLoadMore.innerHTML = `Xem thêm trải nghiệm (Còn lại ${remaining} dịch vụ) <i class="fa-solid fa-chevron-down ms-1"></i>`;
+                seeMoreArea.style.display = 'block';
+            } else {
+                seeMoreArea.style.display = 'none';
+            }
+        }
+
+        function loadMoreCards() {
+            displayLimit += STEP_SIZE;
+            renderCards();
         }
 
         function switchCategory(cat, btn) {
             currentCategory = cat;
+            displayLimit = 10;
             document.querySelectorAll('.nav-category-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             renderCards();
@@ -586,209 +1025,25 @@ Xin chào! Em là Trợ lý AI du lịch của TTLooks ✨ Bạn đang tìm đi�
 
         function doSearch() {
             currentKeyword = document.getElementById('txtSearch').value.trim();
+            displayLimit = 10;
             renderCards();
+            window.scrollTo({ top: 780, behavior: 'smooth' });
         }
 
         function filterByKeyword(k) {
+            hideMegaDropdown();
             document.getElementById('txtSearch').value = k;
             currentKeyword = k;
+            displayLimit = 10;
             renderCards();
+            window.scrollTo({ top: 780, behavior: 'smooth' });
         }
 
         function openBooking(id) {
-            const item = curatedItems.find(x => x.id === id);
-            if (!item) return;
-            Swal.fire({
-                title: item.title,
-                text: `Giá ưu đãi: ${Number(item.price).toLocaleString('vi-VN')} đ. Bạn có muốn đặt chỗ/mua vé trải nghiệm này ngay không?`,
-                imageUrl: item.img,
-                imageWidth: 380,
-                imageHeight: 200,
-                imageAlt: item.title,
-                showCancelButton: true,
-                confirmButtonColor: '#ff5b00',
-                cancelButtonColor: '#64748b',
-                confirmButtonText: 'Tiến Hành Đặt Ngay',
-                cancelButtonText: 'Để sau'
-            }).then((res) => {
-                if (res.isConfirmed) {
-                    window.location.href = `activity-detail.html?id=${id}`;
-                }
-            });
+            window.location.href = `activity-detail.html?id=${id}`;
         }
 
-        // Lập lịch trình AI
-        async function generateVisualAiPlan() {
-            const dest = document.getElementById('aiDest').value.trim();
-            const days = document.getElementById('aiDays').value;
-            const budget = document.getElementById('aiBudget').value.trim() || 'Hợp lý';
-            const pref = document.getElementById('aiPref').value.trim() || 'Khám phá tổng hợp';
-
-            if (!dest) {
-                Swal.fire({ icon: 'warning', title: 'Thiếu điểm đến', text: 'Vui lòng nhập điểm đến du lịch!', confirmButtonColor: '#ff5b00' });
-                return;
-            }
-
-            document.getElementById('aiPlanLoading').classList.remove('d-none');
-            document.getElementById('aiVisualResultArea').classList.add('d-none');
-
-            try {
-                const res = await fetch('/api/ai/planner-visual', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ destination: dest, days, budget, preferences: pref })
-                });
-                const data = await res.json();
-                document.getElementById('aiAdviceText').innerText = data.advice;
-
-                const container = document.getElementById('visualTimelineContainer');
-                const acts = data.activities || curatedItems;
-                const dayCount = (days.includes('1')) ? 1 : (days.includes('3') ? 3 : 2);
-
-                const mealImages = [
-                    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
-                    "https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&fit=crop&w=600&q=80"
-                ];
-
-                let html = '';
-                let actIdx = 0;
-
-                for (let d = 1; d <= dayCount; d++) {
-                    const morningAct = acts[actIdx % acts.length] || {};
-                    actIdx++;
-                    const afternoonAct = acts[actIdx % acts.length] || {};
-                    actIdx++;
-
-                    html += `
-                        <div class="mb-4">
-                            <div class="timeline-day-badge"><i class="fa-regular fa-calendar-days me-2"></i>NGÀY ${d}: KHÁM PHÁ ${dest.toUpperCase()}</div>
-                            <div class="row g-3">
-                                <div class="col-md-6 col-lg-3">
-                                    <div class="card h-100 plan-place-card">
-                                        <img src="${morningAct.imageUrl || morningAct.img || 'https://images.unsplash.com/photo-1583417319070-4a69db38a482'}" class="plan-place-img">
-                                        <div class="card-body p-3 d-flex flex-column">
-                                            <span class="badge badge-morning time-tag mb-2">Sáng (08:00 - 11:30)</span>
-                                            <h6 class="fw-bold mb-1 text-truncate">${morningAct.title || 'Điểm tham quan sáng'}</h6>
-                                            <p class="text-muted small flex-grow-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${morningAct.description || morningAct.desc || 'Check-in và khám phá cảnh đẹp.'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-3">
-                                    <div class="card h-100 plan-place-card">
-                                        <img src="${mealImages[0]}" class="plan-place-img">
-                                        <div class="card-body p-3 d-flex flex-column">
-                                            <span class="badge badge-noon time-tag mb-2">Trưa (11:30 - 13:30)</span>
-                                            <h6 class="fw-bold mb-1 text-truncate">Thưởng Thức Ẩm Thực</h6>
-                                            <p class="text-muted small flex-grow-1">Nghỉ ngơi, thưởng thức đặc sản nức tiếng địa phương.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-3">
-                                    <div class="card h-100 plan-place-card">
-                                        <img src="${afternoonAct.imageUrl || afternoonAct.img || 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e'}" class="plan-place-img">
-                                        <div class="card-body p-3 d-flex flex-column">
-                                            <span class="badge badge-afternoon time-tag mb-2">Chiều (14:00 - 17:30)</span>
-                                            <h6 class="fw-bold mb-1 text-truncate">${afternoonAct.title || 'Điểm tham quan chiều'}</h6>
-                                            <p class="text-muted small flex-grow-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${afternoonAct.description || afternoonAct.desc || 'Tham quan và vui chơi trải nghiệm.'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-3">
-                                    <div class="card h-100 plan-place-card">
-                                        <img src="${mealImages[1]}" class="plan-place-img">
-                                        <div class="card-body p-3 d-flex flex-column">
-                                            <span class="badge badge-evening time-tag mb-2">Tối (18:30 - 21:30)</span>
-                                            <h6 class="fw-bold mb-1 text-truncate">Chợ Đêm & Ngắm Cảnh</h6>
-                                            <p class="text-muted small flex-grow-1">Dạo phố đi bộ ngắm phố đêm lung linh sắc màu.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                container.innerHTML = html;
-                document.getElementById('aiVisualResultArea').classList.remove('d-none');
-            } catch (err) {
-                Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể tạo lịch trình: ' + err.message });
-            } finally {
-                document.getElementById('aiPlanLoading').classList.add('d-none');
-            }
-        }
-async function doRegister() {
-    const fullName = document.getElementById('regName').value.trim();
-    const email = document.getElementById('regEmail').value.trim();
-    const password = document.getElementById('regPass').value;
-    const phone = document.getElementById('regPhone').value.trim();
-
-    if (!fullName || !email || !password || !phone) {
-        Swal.fire({ 
-            icon: 'warning', 
-            title: 'Thiếu thông tin', 
-            text: 'Vui lòng nhập đầy đủ họ tên, email, mật khẩu và số điện thoại!', 
-            confirmButtonColor: '#ff5b00' 
-        });
-        return;
-    }
-
-    const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fullName, email, password, phone })
-    });
-    const data = await res.json();
-    if (res.ok) {
-        // Tự động lưu thông tin vừa đăng ký vào localStorage để lát dùng ngay
-        localStorage.setItem('registeredPhone_' + email.toLowerCase(), phone);
-
-        bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
-        Swal.fire({
-            icon: 'success',
-            title: 'Đăng Ký Thành Công!',
-            text: 'Tài khoản của bạn đã sẵn sàng.',
-            confirmButtonColor: '#ff5b00'
-        }).then(() => {
-            document.getElementById('loginEmail').value = email;
-            new bootstrap.Modal(document.getElementById('loginModal')).show();
-        });
-    } else {
-        Swal.fire({ icon: 'error', title: 'Thất bại', text: data.message || 'Lỗi đăng ký!' });
-    }
-}
-
-async function doLogin() {
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPass').value;
-    if (!email || !password) {
-        Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng nhập email và mật khẩu!' });
-        return;
-    }
-
-    const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-    });
-    if (res.ok) {
-        const user = await res.json();
-        
-        // Nếu API trả về số rỗng/mặc định, lấy lại chính xác số điện thoại người dùng đã nhập lúc đăng ký
-        const savedPhone = localStorage.getItem('registeredPhone_' + email.toLowerCase());
-        if (savedPhone) {
-            user.phoneNumber = savedPhone;
-            user.phone = savedPhone;
-        }
-
-        localStorage.setItem('user', JSON.stringify(user));
-        updateAuthUI();
-        bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
-        Swal.fire({ icon: 'success', title: 'Đăng Nhập Thành Công', text: `Chào mừng ${user.fullName}!`, timer: 1500, showConfirmButton: false });
-    } else {
-        Swal.fire({ icon: 'error', title: 'Thất bại', text: 'Sai email hoặc mật khẩu!' });
-    }
-}
-
+        // HÀM QUẢN TRỊ TRẠNG THÁI ĐĂNG NHẬP / NGƯỜI DÙNG
         function updateAuthUI() {
             const userStr = localStorage.getItem('user');
             const nav = document.getElementById('authNavArea');
@@ -805,7 +1060,9 @@ async function doLogin() {
                                 <li><hr class="dropdown-divider"></li>
                             ` : ''}
                             <li><a class="dropdown-item py-2" href="profile.html"><i class="fa-solid fa-id-badge text-warning me-2"></i>Hồ sơ cá nhân</a></li>
+                            <li><a class="dropdown-item py-2" href="saved-plans.html"><i class="fa-solid fa-route text-success me-2"></i>Lịch trình của tôi</a></li>
                             <li><a class="dropdown-item py-2" href="my-bookings.html"><i class="fa-solid fa-ticket text-primary me-2"></i>Vé đã đặt & E-Ticket</a></li>
+                            <li><a class="dropdown-item py-2" href="vouchers.html"><i class="fa-solid fa-gift text-danger me-2"></i>Kho Voucher của tôi</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item py-2 text-danger" href="javascript:void(0)" onclick="logout()"><i class="fa-solid fa-power-off me-2"></i>Đăng xuất</a></li>
                         </ul>
@@ -819,21 +1076,64 @@ async function doLogin() {
             }
         }
 
+        async function doRegister() {
+            const fullName = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPass').value;
+            const phone = document.getElementById('regPhone').value.trim();
+
+            if (!fullName || !email || !password || !phone) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng nhập đầy đủ họ tên, email, mật khẩu và số điện thoại!' });
+                return;
+            }
+
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ fullName, email, password, phone })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('registerModal')).hide();
+                Swal.fire({ icon: 'success', title: 'Đăng Ký Thành Công!', text: 'Vui lòng đăng nhập.' });
+            } else {
+                Swal.fire({ icon: 'error', title: 'Thất bại', text: data.message });
+            }
+        }
+
+        async function doLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPass').value;
+            if (!email || !password) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu thông tin', text: 'Vui lòng nhập email và mật khẩu!' });
+                return;
+            }
+
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            if (res.ok) {
+                const user = await res.json();
+                localStorage.setItem('user', JSON.stringify(user));
+                updateAuthUI();
+                bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+                Swal.fire({ icon: 'success', title: 'Đăng Nhập Thành Công', timer: 1200, showConfirmButton: false });
+            } else {
+                Swal.fire({ icon: 'error', title: 'Thất bại', text: 'Sai email hoặc mật khẩu!' });
+            }
+        }
+
         function logout() {
             localStorage.removeItem('user');
             updateAuthUI();
             Swal.fire({ icon: 'info', title: 'Đã Đăng Xuất', timer: 1200, showConfirmButton: false });
         }
 
-        // Chatbot AI
         function toggleChat() {
             const win = document.getElementById('chatWindow');
             win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
-        }
-
-        function askQuick(q) {
-            document.getElementById('chatInput').value = q;
-            sendChat();
         }
 
         async function sendChat() {
@@ -848,7 +1148,7 @@ async function doLogin() {
 
             const botTyping = document.createElement('div');
             botTyping.className = 'chat-msg bot';
-            botTyping.innerText = 'Trợ lý AI đang tra cứu thông tin... ✨';
+            botTyping.innerText = 'Trợ lý AI đang tra cứu... ✨';
             box.appendChild(botTyping);
             box.scrollTop = box.scrollHeight;
 
@@ -863,14 +1163,20 @@ async function doLogin() {
                 chatHistory.push({ sender: 'user', text: msg });
                 chatHistory.push({ sender: 'bot', text: data.reply });
             } catch {
-                botTyping.innerText = 'Hiện đường truyền mạng đang bận, bạn thử gửi lại giúp em nhé!';
+                botTyping.innerText = 'Đường truyền bận, bạn thử gửi lại giúp em nhé!';
             }
             box.scrollTop = box.scrollHeight;
         }
 
         window.onload = () => {
-            renderCards();
+            loadActivitiesFromDB();
             updateAuthUI();
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const dateInput = document.getElementById('transDate');
+            if (dateInput) {
+                dateInput.value = tomorrow.toISOString().split('T')[0];
+            }
         };
     </script>
 </body>

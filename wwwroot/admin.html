@@ -107,7 +107,7 @@
             <div class="col-md-3">
                 <div class="stat-card">
                     <div>
-                        <small class="text-muted d-block fw-semibold mb-1">TRẢI NGHIỆM ĐANG MỞ</small>
+                        <small class="text-muted d-block fw-semibold mb-1">ĐIỂM ĐẾN & TRẢI NGHIỆM</small>
                         <h4 class="fw-bold mb-0 text-danger" id="kpiActivities">0</h4>
                     </div>
                     <div class="stat-icon bg-danger-subtle text-danger"><i class="fa-solid fa-earth-americas"></i></div>
@@ -118,13 +118,13 @@
         <!-- TABS ĐIỀU HƯỚNG QUẢN TRỊ -->
         <ul class="nav nav-pills mb-3 gap-2" id="adminTabs">
             <li class="nav-item">
-                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-bookings" onclick="loadAdminBookings()">
-                    <i class="fa-solid fa-list-check me-2"></i>Quản Lý Đơn Vé & E-Ticket
+                <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-destinations" onclick="loadAdminDestinations()">
+                    <i class="fa-solid fa-map-location-dot me-2"></i>Quản Lý Danh Mục Điểm Đến
                 </button>
             </li>
             <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-activities" onclick="loadAdminActivities()">
-                    <i class="fa-solid fa-ticket-simple me-2"></i>Kho Vé & Trải Nghiệm
+                <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-bookings" onclick="loadAdminBookings()">
+                    <i class="fa-solid fa-list-check me-2"></i>Quản Lý Đơn Vé & E-Ticket
                 </button>
             </li>
             <li class="nav-item">
@@ -136,8 +136,41 @@
 
         <div class="tab-content">
 
-            <!-- TAB 1: QUẢN LÝ ĐƠN VÉ & DUYỆT ĐƠN -->
-            <div class="tab-pane fade show active" id="tab-bookings">
+            <!-- TAB 1: QUẢN LÝ DANH MỤC ĐIỂM ĐẾN (CHỨC NĂNG MỚI) -->
+            <div class="tab-pane fade show active" id="tab-destinations">
+                <div class="admin-box p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <h5 class="fw-bold text-dark mb-0">Danh Mục Điểm Đến & Trải Nghiệm</h5>
+                            <input type="text" id="searchDestInput" class="form-control form-control-sm rounded-pill" style="width: 260px;" placeholder="Tìm tên điểm đến, thành phố..." onkeyup="searchDestinations()">
+                        </div>
+                        <button class="btn btn-orange btn-sm rounded-pill" onclick="openAddDestModal()">
+                            <i class="fa-solid fa-plus me-1"></i>Thêm Điểm Đến Mới
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light small">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Ảnh</th>
+                                    <th>Tên Điểm Đến</th>
+                                    <th>Thành Phố / Tỉnh</th>
+                                    <th>Phân Loại</th>
+                                    <th>Giá Vé</th>
+                                    <th class="text-end">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tblDestBody" class="small">
+                                <tr><td colspan="7" class="text-center py-4 text-muted">Đang tải danh mục điểm đến...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: QUẢN LÝ ĐƠN VÉ & DUYỆT ĐƠN -->
+            <div class="tab-pane fade" id="tab-bookings">
                 <div class="admin-box p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="fw-bold text-dark mb-0">Danh Sách Đơn Đặt Vé Toàn Hệ Thống</h5>
@@ -160,35 +193,6 @@
                             </thead>
                             <tbody id="tblBookingsBody" class="small">
                                 <tr><td colspan="9" class="text-center py-4 text-muted">Đang nạp dữ liệu đơn vé...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 2: QUẢN LÝ KHO VÉ DU LỊCH -->
-            <div class="tab-pane fade" id="tab-activities">
-                <div class="admin-box p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold text-dark mb-0">Kho Trải Nghiệm & Vé Du Lịch</h5>
-                        <button class="btn btn-orange btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#modalAddActivity">
-                            <i class="fa-solid fa-plus me-1"></i>Thêm Vé Mới
-                        </button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light small">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Ảnh</th>
-                                    <th>Tên Trải Nghiệm</th>
-                                    <th>Đơn Giá</th>
-                                    <th>Trạng Thái</th>
-                                    <th class="text-end">Thao Tác</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tblActivitiesBody" class="small">
-                                <tr><td colspan="6" class="text-center py-4 text-muted">Đang nạp kho vé...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -226,32 +230,47 @@
         </div>
     </div>
 
-    <!-- Modal Thêm Vé Mới -->
-    <div class="modal fade" id="modalAddActivity" tabindex="-1">
+    <!-- Modal Thêm / Sửa Điểm Đến -->
+    <div class="modal fade" id="modalDest" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-4 border-0 shadow">
                 <div class="modal-header bg-orange text-white" style="background:var(--brand-orange);">
-                    <h5 class="modal-title fw-bold">Thêm Vé / Trải Nghiệm Mới</h5>
+                    <h5 class="modal-title fw-bold" id="modalDestTitle">Thêm Điểm Đến Mới</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
+                    <input type="hidden" id="editDestId" value="0">
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Tên trải nghiệm du lịch</label>
-                        <input type="text" id="addActTitle" class="form-control" placeholder="Ví dụ: Vé Cáp Treo Fansipan Legend Sapa">
+                        <label class="form-label small fw-bold">Tên điểm đến / Dịch vụ</label>
+                        <input type="text" id="destTitle" class="form-control" placeholder="Ví dụ: Cáp Treo Sun World Fansipan Legend">
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Thành phố / Tỉnh</label>
+                            <input type="text" id="destCity" class="form-control" placeholder="Ví dụ: Lào Cai">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold">Phân loại</label>
+                            <select id="destCategory" class="form-select">
+                                <option value="Điểm đến Check-in">Điểm đến Check-in</option>
+                                <option value="Khách Sạn & Resort">Khách Sạn & Resort</option>
+                                <option value="Quán Ăn & Đặc Sản">Quán Ăn & Đặc Sản</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold">Đơn giá vé (VNĐ)</label>
-                        <input type="number" id="addActPrice" class="form-control" placeholder="850000">
+                        <input type="number" id="destPrice" class="form-control" placeholder="850000">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Link ảnh (URL Unsplash hoặc CDN)</label>
-                        <input type="text" id="addActImg" class="form-control" placeholder="https://images.unsplash.com/photo-...">
+                        <label class="form-label small fw-bold">Link ảnh đại diện (URL)</label>
+                        <input type="text" id="destImg" class="form-control" placeholder="https://images.unsplash.com/photo-...">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small fw-bold">Mô tả ngắn</label>
-                        <textarea id="addActDesc" class="form-control" rows="3" placeholder="Mô tả điểm nhấn và trải nghiệm..."></textarea>
+                        <label class="form-label small fw-bold">Mô tả tóm tắt</label>
+                        <textarea id="destDesc" class="form-control" rows="3" placeholder="Mô tả điểm nhấn và trải nghiệm..."></textarea>
                     </div>
-                    <button class="btn btn-orange w-100 py-2 rounded-pill fw-bold" onclick="submitCreateActivity()">
+                    <button class="btn btn-orange w-100 py-2 rounded-pill fw-bold" onclick="saveDestination()">
                         <i class="fa-solid fa-floppy-disk me-1"></i> Lưu Vào CSDL
                     </button>
                 </div>
@@ -261,7 +280,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Kiểm tra phân quyền Admin
+        // Phân quyền Quản trị viên
         const userStr = localStorage.getItem('user');
         if (!userStr) {
             Swal.fire({ icon: 'warning', title: 'Yêu cầu đăng nhập', text: 'Vui lòng đăng nhập quyền Admin!', confirmButtonColor: '#ff5b00' })
@@ -269,7 +288,7 @@
         } else {
             const user = JSON.parse(userStr);
             if (user.roleId !== 1) {
-                Swal.fire({ icon: 'error', title: 'Từ chối truy cập', text: 'Tài khoản của bạn không có quyền Quản trị viên (Admin)!', confirmButtonColor: '#ff5b00' })
+                Swal.fire({ icon: 'error', title: 'Từ chối truy cập', text: 'Tài khoản không có quyền Admin!', confirmButtonColor: '#ff5b00' })
                     .then(() => window.location.href = '/');
             }
         }
@@ -282,13 +301,140 @@
                 document.getElementById('kpiRevenue').innerText = Number(data.revenue).toLocaleString('vi-VN') + ' đ';
                 document.getElementById('kpiTickets').innerText = data.paidTickets + ' vé';
                 document.getElementById('kpiUsers').innerText = data.totalUsers + ' người';
-                document.getElementById('kpiActivities').innerText = data.totalActivities + ' tour/vé';
+                document.getElementById('kpiActivities').innerText = data.totalActivities + ' điểm đến';
             } catch (err) {
                 console.error(err);
             }
         }
 
-        // 2. NẠP VÀ QUẢN LÝ ĐƠN VÉ (BOOKINGS)
+        // 2. QUẢN LÝ DANH MỤC ĐIỂM ĐẾN
+        let allDestinations = [];
+
+        async function loadAdminDestinations() {
+            const tbody = document.getElementById('tblDestBody');
+            try {
+                const res = await fetch('/api/admin/destinations');
+                allDestinations = await res.json();
+                renderDestinations(allDestinations);
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">Lỗi tải danh mục: ${err.message}</td></tr>`;
+            }
+        }
+
+        function renderDestinations(list) {
+            const tbody = document.getElementById('tblDestBody');
+            if (!list || list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-muted">Chưa có điểm đến nào phù hợp.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = list.map(item => `
+                <tr>
+                    <td class="fw-bold text-secondary">#${item.activityId}</td>
+                    <td><img src="${item.imageUrl || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb'}" class="rounded-3" style="width: 55px; height: 40px; object-fit: cover;"></td>
+                    <td>
+                        <strong class="text-dark">${item.title}</strong>
+                        <p class="text-muted small mb-0 text-truncate" style="max-width: 250px;">${item.description || ''}</p>
+                    </td>
+                    <td><i class="fa-solid fa-location-dot text-danger me-1"></i>${item.city || 'Việt Nam'}</td>
+                    <td><span class="badge bg-light text-dark border">${item.category || 'Điểm đến Check-in'}</span></td>
+                    <td class="text-danger fw-bold">${Number(item.price).toLocaleString('vi-VN')} đ</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-primary rounded-pill px-2 me-1" onclick="openEditDestModal(${item.activityId})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-sm btn-outline-danger rounded-pill px-2" onclick="deleteDestination(${item.activityId})"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function searchDestinations() {
+            const kw = document.getElementById('searchDestInput').value.trim().toLowerCase();
+            const filtered = allDestinations.filter(d => 
+                d.title.toLowerCase().includes(kw) || (d.city && d.city.toLowerCase().includes(kw))
+            );
+            renderDestinations(filtered);
+        }
+
+        function openAddDestModal() {
+            document.getElementById('editDestId').value = "0";
+            document.getElementById('modalDestTitle').innerText = "Thêm Điểm Đến Mới";
+            document.getElementById('destTitle').value = "";
+            document.getElementById('destCity').value = "";
+            document.getElementById('destCategory').value = "Điểm đến Check-in";
+            document.getElementById('destPrice').value = "";
+            document.getElementById('destImg').value = "";
+            document.getElementById('destDesc').value = "";
+            new bootstrap.Modal(document.getElementById('modalDest')).show();
+        }
+
+        function openEditDestModal(id) {
+            const item = allDestinations.find(x => x.activityId === id);
+            if (!item) return;
+
+            document.getElementById('editDestId').value = item.activityId;
+            document.getElementById('modalDestTitle').innerText = "Cập Nhật Điểm Đến #" + item.activityId;
+            document.getElementById('destTitle').value = item.title;
+            document.getElementById('destCity').value = item.city || "";
+            document.getElementById('destCategory').value = item.category || "Điểm đến Check-in";
+            document.getElementById('destPrice').value = item.price;
+            document.getElementById('destImg').value = item.imageUrl || "";
+            document.getElementById('destDesc').value = item.description || "";
+            new bootstrap.Modal(document.getElementById('modalDest')).show();
+        }
+
+        async function saveDestination() {
+            const id = parseInt(document.getElementById('editDestId').value);
+            const title = document.getElementById('destTitle').value.trim();
+            const city = document.getElementById('destCity').value.trim();
+            const category = document.getElementById('destCategory').value;
+            const price = Number(document.getElementById('destPrice').value);
+            const imageUrl = document.getElementById('destImg').value.trim();
+            const description = document.getElementById('destDesc').value.trim();
+
+            if (!title || !price) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu dữ liệu', text: 'Vui lòng nhập tên điểm đến và đơn giá vé!', confirmButtonColor: '#ff5b00' });
+                return;
+            }
+
+            const payload = { title, city, category, price, imageUrl, description };
+            const url = id === 0 ? '/api/admin/destinations' : `/api/admin/destinations/${id}`;
+            const method = id === 0 ? 'POST' : 'PUT';
+
+            try {
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                bootstrap.Modal.getInstance(document.getElementById('modalDest')).hide();
+                Swal.fire({ icon: 'success', title: 'Thành công', text: data.message, timer: 1500, showConfirmButton: false });
+                loadAdminDestinations();
+                loadKPI();
+            } catch (e) {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: e.message });
+            }
+        }
+
+        async function deleteDestination(id) {
+            const confirm = await Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: 'Bạn có chắc chắn muốn xóa điểm đến này khỏi hệ thống?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý xóa'
+            });
+            if (confirm.isConfirmed) {
+                const res = await fetch(`/api/admin/destinations/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                Swal.fire({ icon: 'success', title: 'Đã xóa', text: data.message, timer: 1500, showConfirmButton: false });
+                loadAdminDestinations();
+                loadKPI();
+            }
+        }
+
+        // 3. QUẢN LÝ ĐƠN VÉ (BOOKINGS)
         async function loadAdminBookings() {
             const tbody = document.getElementById('tblBookingsBody');
             try {
@@ -347,78 +493,7 @@
             }
         }
 
-        // 3. NẠP VÀ QUẢN LÝ KHO VÉ (ACTIVITIES)
-        async function loadAdminActivities() {
-            const tbody = document.getElementById('tblActivitiesBody');
-            try {
-                const res = await fetch('/api/admin/activities');
-                const list = await res.json();
-                tbody.innerHTML = list.map(item => `
-                    <tr>
-                        <td class="fw-bold text-secondary">#${item.activityId}</td>
-                        <td><img src="${item.imageUrl}" class="rounded-3" style="width: 55px; height: 40px; object-fit: cover;"></td>
-                        <td>
-                            <strong class="text-dark">${item.title}</strong>
-                            <p class="text-muted small mb-0 text-truncate" style="max-width: 320px;">${item.description}</p>
-                        </td>
-                        <td class="text-danger fw-bold">${Number(item.price).toLocaleString('vi-VN')} đ</td>
-                        <td><span class="badge ${item.isActive ? 'bg-success' : 'bg-secondary'}">${item.isActive ? 'Mở bán' : 'Tạm ẩn'}</span></td>
-                        <td class="text-end">
-                            <button class="btn btn-sm btn-outline-danger rounded-pill" onclick="deleteActivity(${item.activityId})"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `).join('');
-            } catch (err) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-4">Lỗi: ${err.message}</td></tr>`;
-            }
-        }
-
-        async function submitCreateActivity() {
-            const title = document.getElementById('addActTitle').value.trim();
-            const price = Number(document.getElementById('addActPrice').value);
-            const img = document.getElementById('addActImg').value.trim();
-            const desc = document.getElementById('addActDesc').value.trim();
-
-            if (!title || !price) {
-                Swal.fire({ icon: 'warning', title: 'Thiếu dữ liệu', text: 'Vui lòng nhập tên vé và đơn giá!', confirmButtonColor: '#ff5b00' });
-                return;
-            }
-
-            try {
-                const res = await fetch('/api/admin/activities', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, price, imageUrl: img, description: desc })
-                });
-                const data = await res.json();
-                bootstrap.Modal.getInstance(document.getElementById('modalAddActivity')).hide();
-                Swal.fire({ icon: 'success', title: 'Thành công', text: data.message, timer: 1500, showConfirmButton: false });
-                loadAdminActivities();
-                loadKPI();
-            } catch (e) {
-                Swal.fire({ icon: 'error', title: 'Lỗi', text: e.message });
-            }
-        }
-
-        async function deleteActivity(id) {
-            const confirm = await Swal.fire({
-                title: 'Xác nhận xóa?',
-                text: 'Bạn có chắc chắn muốn xóa hoặc ẩn trải nghiệm này?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'Đồng ý xóa'
-            });
-            if (confirm.isConfirmed) {
-                const res = await fetch(`/api/admin/activities/${id}`, { method: 'DELETE' });
-                const data = await res.json();
-                Swal.fire({ icon: 'success', title: 'Đã xử lý', text: data.message, timer: 1500, showConfirmButton: false });
-                loadAdminActivities();
-                loadKPI();
-            }
-        }
-
-        // 4. NẠP VÀ PHÂN QUYỀN NGƯỜI DÙNG (USERS)
+        // 4. QUẢN TRỊ NGƯỜI DÙNG (USERS)
         async function loadAdminUsers() {
             const tbody = document.getElementById('tblUsersBody');
             try {
@@ -462,7 +537,7 @@
 
         window.onload = () => {
             loadKPI();
-            loadAdminBookings();
+            loadAdminDestinations();
         };
     </script>
 </body>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kho Voucher & Ưu Đãi Của Bạn - TTLooks</title>
+    <!-- Bootstrap 5, FontAwesome & SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --brand-orange: #ff5b00;
+            --brand-orange-hover: #e04f00;
+        }
+        body { background-color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; color: #334155; }
+        .navbar-brand { font-weight: 800; color: var(--brand-orange) !important; font-size: 1.55rem; }
+        
+        .voucher-card {
+            background: #fff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+        .voucher-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .voucher-left {
+            background: linear-gradient(135deg, #fff7ed, #ffedd5);
+            width: 145px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-right: 2px dashed #fed7aa;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+        }
+        .voucher-left::before, .voucher-left::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            background-color: #f8fafc;
+            border-radius: 50%;
+        }
+        .voucher-left::before { top: -10px; }
+        .voucher-left::after { bottom: -10px; }
+
+        .voucher-right {
+            flex-grow: 1;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Khi gần hết hạn: BÁO ĐỎ */
+        .voucher-card.urgent {
+            border: 2px solid #ef4444 !important;
+            background-color: #fffafb;
+        }
+        .voucher-card.urgent .voucher-left {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            border-right: 2px dashed #fca5a5;
+        }
+        .text-expire-urgent {
+            color: #dc2626 !important;
+            background-color: #fee2e2;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            display: inline-block;
+            border: 1px solid #f87171;
+        }
+
+        /* Khi đã sử dụng */
+        .voucher-card.used {
+            opacity: 0.6;
+            filter: grayscale(80%);
+            pointer-events: none;
+        }
+
+        .btn-use-voucher {
+            background-color: var(--brand-orange);
+            color: #fff;
+            border: none;
+            font-weight: 700;
+            border-radius: 20px;
+            padding: 6px 18px;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+        .btn-use-voucher:hover {
+            background-color: var(--brand-orange-hover);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-compass me-2"></i>TTLooks</a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i>Về Trang Chủ</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        
+        <!-- KHỐI 1: NHẬP MÃ ĐỂ LƯU VÀO KHO -->
+        <div class="card p-3 p-md-4 shadow-sm border-0 rounded-4 mb-4 bg-white">
+            <div class="row align-items-center g-3">
+                <div class="col-md-7">
+                    <h5 class="fw-bold mb-1 text-dark"><i class="fa-solid fa-plus-circle text-orange me-2"></i>Nhập mã ưu đãi để lưu vào Kho Voucher</h5>
+                    <p class="text-muted small mb-0">Nhập mã voucher được tặng của bạn để lưu trữ vĩnh viễn và sẵn sàng sử dụng khi đặt vé.</p>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="text" id="txtInputNewVoucher" class="form-control text-uppercase fw-bold rounded-start-pill ps-3" placeholder="Ví dụ: CHILLICRAB20, BANA50K...">
+                        <button class="btn btn-dark fw-bold rounded-end-pill px-4" onclick="saveVoucherToWallet()">
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Lưu Vào Kho
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-ticket text-danger me-2"></i>Danh Sách Voucher Khả Dụng (Tự động áp dụng)</h5>
+            <span class="badge bg-danger-subtle text-danger border border-danger-subtle p-2">
+                <i class="fa-solid fa-circle-exclamation me-1"></i>Voucher sắp hết hạn xếp lên đầu & bôi đỏ
+            </span>
+        </div>
+
+        <!-- DANH SÁCH VOUCHER -->
+        <div class="row g-3" id="voucherContainer"></div>
+    </div>
+
+    <script>
+        // DANH MỤC CÁC VOUCHER HỆ THỐNG CÔNG NHẬN (CÓ CHỈ ĐỊNH DỊCH VỤ CỤ THỂ)
+        // targetId: ID của dịch vụ trong CSDL mà voucher này áp dụng
+        const defaultVoucherCatalog = [
+            {
+                code: "CHILLICRAB20",
+                discountPercent: 20,
+                discountTitle: "Giảm 20%",
+                targetActivityId: 8, // ÁP DỤNG RIÊNG CHO: Buffet Cua Sốt Ớt Chilli Crab Vịnh Marina
+                targetName: "Buffet Cua Sốt Ớt Chilli Crab Vịnh Marina",
+                expireDays: 2, // Còn 2 ngày -> BÁO ĐỎ, ĐẨY LÊN ĐẦU
+                condition: "Áp dụng đích danh cho suất Buffet Cua Sốt Ớt Chilli Crab.",
+                singleUse: true,
+                isUsed: false
+            },
+            {
+                code: "BANA50K",
+                discountAmount: 50000,
+                discountTitle: "Giảm 50.000 đ",
+                targetActivityId: 1, // ÁP DỤNG RIÊNG CHO: Vé Cáp Treo Sun World Bà Nà Hills
+                targetName: "Vé Cáp Treo Sun World Bà Nà Hills",
+                expireDays: 4, // Còn 4 ngày -> BÁO ĐỎ
+                condition: "Chỉ áp dụng khi mua vé Cáp Treo Sun World Bà Nà Hills.",
+                singleUse: true,
+                isUsed: false
+            },
+            {
+                code: "UNIVERSAL100K",
+                discountAmount: 100000,
+                discountTitle: "Giảm 100.000 đ",
+                targetActivityId: 2, // ÁP DỤNG CHO: Universal Studios Singapore
+                targetName: "Công Viên Universal Studios Singapore",
+                expireDays: 15,
+                condition: "Chỉ áp dụng khi đặt vé Universal Studios Singapore.",
+                singleUse: true,
+                isUsed: false
+            },
+            {
+                code: "FURAMA15",
+                discountPercent: 15,
+                discountTitle: "Giảm 15%",
+                targetActivityId: 4, // ÁP DỤNG CHO: Furama Resort Đà Nẵng
+                targetName: "Furama Resort 5 Sao Đà Nẵng",
+                expireDays: 30,
+                condition: "Áp dụng đích danh cho gói đặt phòng tại Furama Resort Đà Nẵng.",
+                singleUse: true,
+                isUsed: false
+            }
+        ];
+
+        // Lấy danh sách voucher từ LocalStorage
+        function getUserVouchers() {
+            const saved = localStorage.getItem('user_vouchers');
+            if (!saved) {
+                localStorage.setItem('user_vouchers', JSON.stringify(defaultVoucherCatalog));
+                return defaultVoucherCatalog;
+            }
+            return JSON.parse(saved);
+        }
+
+        function renderVouchers() {
+            const list = getUserVouchers();
+            const container = document.getElementById('voucherContainer');
+
+            // SẮP XẾP: ƯU TIÊN VOUCHER CÒN HẠN ÍT NHẤT LÊN ĐẦU (ĐÃ DÙNG THÌ XUỐNG DƯỚI)
+            list.sort((a, b) => {
+                if (a.isUsed && !b.isUsed) return 1;
+                if (!a.isUsed && b.isUsed) return -1;
+                return a.expireDays - b.expireDays;
+            });
+
+            container.innerHTML = list.map(v => {
+                const isUrgent = v.expireDays <= 5 && !v.isUsed;
+                return `
+                    <div class="col-lg-6">
+                        <div class="voucher-card ${isUrgent ? 'urgent' : ''} ${v.isUsed ? 'used' : ''}">
+                            <div class="voucher-left">
+                                <span class="badge ${v.isUsed ? 'bg-secondary' : 'bg-danger'} text-white mb-1 small">
+                                    ${v.isUsed ? 'ĐÃ DÙNG' : (v.discountPercent ? `GIẢM ${v.discountPercent}%` : 'VOUCHER')}
+                                </span>
+                                <h4 class="fw-bold text-danger mb-0">${v.discountTitle}</h4>
+                                <small class="text-muted" style="font-size:0.75rem;">1 lần duy nhất</small>
+                            </div>
+
+                            <div class="voucher-right">
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="font-monospace fw-bold fs-6 text-dark">${v.code}</span>
+                                        ${v.isUsed ? `
+                                            <span class="badge bg-secondary">Đã sử dụng</span>
+                                        ` : `
+                                            <button class="btn-use-voucher" onclick="useVoucherNow('${v.code}', ${v.targetActivityId})">
+                                                <i class="fa-solid fa-bolt me-1"></i>Sử Dụng
+                                            </button>
+                                        `}
+                                    </div>
+                                    <p class="text-dark small mb-1 fw-bold text-truncate">${v.targetName}</p>
+                                    <p class="text-secondary small mb-2" style="font-size:0.8rem;">${v.condition}</p>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                    <span class="small ${isUrgent ? 'text-expire-urgent' : 'text-muted'}">
+                                        <i class="fa-regular fa-clock me-1"></i>
+                                        ${v.isUsed ? 'Mã này đã dùng xong' : (isUrgent ? `Hết hạn: Còn đúng ${v.expireDays} ngày!` : `Hạn dùng: Còn ${v.expireDays} ngày`)}
+                                    </span>
+                                    <span class="text-muted small">Chỉ áp dụng 1 nơi</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // HÀM: LƯU MÃ MỚI VÀO KHO
+        function saveVoucherToWallet() {
+            const input = document.getElementById('txtInputNewVoucher');
+            const code = input.value.trim().toUpperCase();
+            if (!code) {
+                Swal.fire({ icon: 'warning', title: 'Thiếu mã', text: 'Vui lòng nhập mã voucher bạn muốn lưu!' });
+                return;
+            }
+
+            const current = getUserVouchers();
+            if (current.some(x => x.code === code)) {
+                Swal.fire({ icon: 'info', title: 'Đã có', text: 'Mã voucher này đã có sẵn trong kho của bạn rồi!' });
+                return;
+            }
+
+            // Mẫu voucher nạp mới
+            let newVoucher = null;
+            if (code === "CHILLICRAB20") {
+                newVoucher = {
+                    code: "CHILLICRAB20", discountPercent: 20, discountTitle: "Giảm 20%",
+                    targetActivityId: 8, targetName: "Buffet Cua Sốt Ớt Chilli Crab Vịnh Marina",
+                    expireDays: 2, condition: "Áp dụng cho Buffet Cua Sốt Ớt Chilli Crab.", singleUse: true, isUsed: false
+                };
+            } else if (code === "BANA50K") {
+                newVoucher = {
+                    code: "BANA50K", discountAmount: 50000, discountTitle: "Giảm 50.000 đ",
+                    targetActivityId: 1, targetName: "Vé Cáp Treo Sun World Bà Nà Hills",
+                    expireDays: 3, condition: "Áp dụng cho Vé Cáp Treo Sun World Bà Nà Hills.", singleUse: true, isUsed: false
+                };
+            } else {
+                newVoucher = {
+                    code: code, discountAmount: 50000, discountTitle: "Giảm 50.000 đ",
+                    targetActivityId: 1, targetName: "Vé Trải Nghiệm Du Lịch Tuyển Chọn",
+                    expireDays: 7, condition: "Áp dụng cho 1 đơn đặt vé du lịch chỉ định.", singleUse: true, isUsed: false
+                };
+            }
+
+            current.unshift(newVoucher);
+            localStorage.setItem('user_vouchers', JSON.stringify(current));
+            input.value = '';
+            Swal.fire({ icon: 'success', title: 'Thành công', text: `Đã lưu mã ${code} vào kho voucher của bạn!` });
+            renderVouchers();
+        }
+
+        // HÀM: NHẤN "SỬ DỤNG" -> CHUYỂN THẲNG SANG TRANG ĐẶT VÉ VÀ TỰ ĐỘNG ÁP MÃ
+        function useVoucherNow(code, targetId) {
+            Swal.fire({
+                title: 'Sử dụng Voucher này?',
+                text: `Mã ${code} sẽ tự động được áp dụng và chiết khấu khi chuyển sang trang đặt vé!`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#ff5b00',
+                confirmButtonText: 'Đến Trang Đặt Vé Ngay',
+                cancelButtonText: 'Hủy'
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    // Chuyển hướng kèm theo ID trải nghiệm và mã Voucher trên URL
+                    window.location.href = `activity-detail.html?id=${targetId}&voucher=${encodeURIComponent(code)}`;
+                }
+            });
+        }
+
+        window.onload = renderVouchers;
+    </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Trình Du Lịch Của Tôi - TTLooks</title>
+    <!-- Bootstrap 5, FontAwesome & SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --brand-orange: #ff5b00;
+            --brand-orange-hover: #e04f00;
+        }
+        body { 
+            background-color: #f8fafc; 
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            color: #334155;
+        }
+        .navbar-brand { font-weight: 800; color: var(--brand-orange) !important; font-size: 1.55rem; }
+        .text-orange { color: var(--brand-orange); }
+        .btn-orange { background-color: var(--brand-orange); color: #fff; border: none; font-weight: 600; }
+        .btn-orange:hover { background-color: var(--brand-orange-hover); color: #fff; }
+        
+        .plan-card {
+            border: none;
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        .timeline-day-badge {
+            background: linear-gradient(135deg, #ff5b00, #ff8533);
+            color: #fff;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        .plan-place-card {
+            border: 1px solid #f1f5f9;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            height: 100%;
+        }
+        .plan-place-img { height: 140px; width: 100%; object-fit: cover; }
+        .time-tag { font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 8px; }
+        .badge-morning { background-color: #ffc107; color: #212529; }
+        .badge-noon { background-color: #fd7e14; color: #fff; }
+        .badge-afternoon { background-color: #0d6efd; color: #fff; }
+        .badge-evening { background-color: #6f42c1; color: #fff; }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-compass me-2"></i>TTLooks</a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <span class="small fw-semibold text-muted d-none d-md-inline" id="userDisplayName">
+                    <i class="fa-solid fa-circle-user text-warning me-1"></i> Khách Hàng TTLooks
+                </span>
+                <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="fa-solid fa-arrow-left me-1"></i>Về Trang Chủ</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        
+        <!-- Header Banner -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h3 class="fw-bold mb-1 text-dark"><i class="fa-solid fa-route text-orange me-2"></i>Lịch Trình Du Lịch Của Tôi</h3>
+                <p class="text-muted small mb-0">Xem lại các kế hoạch du lịch đã lưu (kết hợp lời khuyên AI và thẻ hình ảnh trực quan)</p>
+            </div>
+            <a href="ai-planner.html" class="btn btn-orange btn-sm rounded-pill px-3 shadow-sm">
+                <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Tạo Lịch Trình AI Mới
+            </a>
+        </div>
+
+        <!-- Khung danh sách lịch trình -->
+        <div id="plansContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-warning" role="status"></div>
+                <p class="text-muted mt-2 small">Đang nạp danh sách kế hoạch du lịch...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getSafeUser() {
+            let u = null;
+            try {
+                u = JSON.parse(localStorage.getItem('user') || localStorage.getItem('currentUser') || 'null');
+            } catch (e) { u = null; }
+
+            if (!u || (!u.userId && !u.UserId)) {
+                u = { userId: 2, fullName: "Lê Quốc Tú", email: "khachhang@ttlooks.com", roleId: 2 };
+                localStorage.setItem('user', JSON.stringify(u));
+            }
+            return u;
+        }
+
+        const currentUser = getSafeUser();
+        const activeUserId = currentUser.userId || currentUser.UserId || 2;
+        const activeName = currentUser.fullName || currentUser.FullName || currentUser.email || 'Khách Hàng';
+        document.getElementById('userDisplayName').innerHTML = `<i class="fa-solid fa-circle-user text-warning me-1"></i> Xin chào, <strong>${activeName}</strong>`;
+
+        async function loadSavedPlans(userId) {
+            const container = document.getElementById('plansContainer');
+            try {
+                const res = await fetch(`/api/itineraries?userId=${userId}`);
+                const plans = await res.json();
+
+                if (!plans || plans.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-5 bg-white rounded-4 shadow-sm p-4">
+                            <i class="fa-solid fa-map-location-dot text-muted fs-1 mb-3"></i>
+                            <h5 class="text-secondary fw-bold">Chưa có lịch trình nào được lưu!</h5>
+                            <p class="text-muted small">Hãy nhấn vào nút bên dưới để nhờ Trợ lý AI tạo lộ trình du lịch có chữ & hình ảnh cho bạn.</p>
+                            <a href="ai-planner.html" class="btn btn-warning text-white fw-bold btn-sm rounded-pill px-4 mt-2">
+                                <i class="fa-solid fa-wand-magic-sparkles me-1"></i>Tạo Lịch Trình Ngay
+                            </a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = plans.map(p => {
+                    let adviceText = "";
+                    let visualHtml = "";
+
+                    // GIẢI MÃ NỘI DUNG DETAILS (NẾU LƯU DẠNG JSON CHỨA CẢ CHỮ VÀ ẢNH)
+                    try {
+                        const parsed = JSON.parse(p.details);
+                        if (parsed.advice || parsed.timelineHtml) {
+                            adviceText = parsed.advice || "";
+                            visualHtml = parsed.timelineHtml || "";
+                        } else {
+                            adviceText = p.details;
+                        }
+                    } catch (e) {
+                        // Nếu là dữ liệu text cũ
+                        adviceText = p.details;
+                    }
+
+                    return `
+                        <div class="card plan-card">
+                            <div class="card-header bg-white p-4 border-bottom-0 pb-0 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h4 class="fw-bold text-dark mb-1">${p.title}</h4>
+                                    <div class="d-flex align-items-center gap-2 small text-muted flex-wrap">
+                                        <span class="badge bg-light text-danger border"><i class="fa-solid fa-location-dot me-1"></i>${p.destination}</span>
+                                        <span><i class="fa-solid fa-calendar-day text-primary me-1"></i>${p.days || 'Nhiều ngày'}</span>
+                                        <span><i class="fa-solid fa-coins text-warning me-1"></i>${p.budget || 'Linh hoạt'}</span>
+                                        <span><i class="fa-regular fa-clock me-1"></i>Lưu lúc: ${p.createdAt}</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="deletePlan(${p.id})">
+                                    <i class="fa-solid fa-trash me-1"></i>Xóa
+                                </button>
+                            </div>
+
+                            <div class="card-body p-4">
+                                <!-- PHẦN 1: CHỮ LỜI KHUYÊN AI -->
+                                ${adviceText ? `
+                                    <div class="alert alert-info border-0 rounded-3 mb-4 p-3 bg-light text-secondary small" style="white-space: pre-line; line-height: 1.7;">
+                                        <div class="fw-bold text-primary mb-1"><i class="fa-solid fa-robot me-1"></i>Lời khuyên chi tiết từ Chuyên Gia Du Lịch AI:</div>
+                                        ${adviceText}
+                                    </div>
+                                ` : ''}
+
+                                <!-- PHẦN 2: CÁC THẺ CARD HÌNH ẢNH 4 BUỔI TRỰC QUAN -->
+                                ${visualHtml ? `
+                                    <div class="mt-3">
+                                        ${visualHtml}
+                                    </div>
+                                ` : ''}
+                            </div>
+
+                            <div class="card-footer bg-white p-3 px-4 border-top text-end">
+                                <a href="/" class="text-orange fw-bold text-decoration-none small">
+                                    Đặt vé dịch vụ cho chuyến đi này &rarr;
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                container.innerHTML = `<div class="text-center text-danger py-5">Lỗi nạp lịch trình: ${err.message}</div>`;
+            }
+        }
+
+        async function deletePlan(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa kế hoạch du lịch này khỏi tài khoản?')) {
+                try {
+                    await fetch(`/api/itineraries/${id}`, { method: 'DELETE' });
+                    loadSavedPlans(activeUserId);
+                } catch (e) {
+                    alert('Lỗi: ' + e.message);
+                }
+            }
+        }
+
+        window.onload = () => {
+            loadSavedPlans(activeUserId);
+        };
+    </script>
+</body>
+</html>
